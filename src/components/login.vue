@@ -9,7 +9,7 @@
             flat
             style="padding: 80px"
         >
-          <h4 class="text-center text-h5">Login with your <a class="text-decoration-none" style="font-family: inherit !important;" href="https//built.africa" target="_blank">Built<sup><v-icon color="blue" x-small>mdi-arrow-right-top</v-icon></sup></a> Account</h4>
+          <h4 class="text-center text-h5">Login with your <a class="text-decoration-none" style="font-family: inherit !important;" href="https://built.africa" target="_blank">Built<sup><v-icon color="blue" x-small>mdi-arrow-right-top</v-icon></sup></a> Account</h4>
           <v-card-text class="mt-4">
             <v-form ref="login_form">
               <label>Email</label>
