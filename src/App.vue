@@ -116,6 +116,8 @@
             color="blue darken-4"
             class="white--text text-capitalize fw-bold"
             rounded
+            x-large
+            depressed
         >
 					<v-icon color="white" small>mdi-logout</v-icon>
 					Log out
