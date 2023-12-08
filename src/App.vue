@@ -115,7 +115,6 @@
             @click="showLogoutDialog=true"
             color="blue darken-4"
             class="white--text text-capitalize fw-bold"
-            small
             rounded
         >
 					<v-icon color="white" small>mdi-logout</v-icon>
