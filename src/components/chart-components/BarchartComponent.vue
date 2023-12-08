@@ -1,6 +1,5 @@
 <template>
-  <v-card flat color="blue lighten-5" class="pa-2">
-
+  <v-card flat :color="color === 'default' ? 'blue lighten-5' : color  + ' lighten-5'" class="pa-2">
     <apexchart :options="chartOptions" :series="series"></apexchart>
   </v-card>
 
@@ -18,7 +17,11 @@ export default defineComponent({
     title: {
       type: String,
       default: ""
-    }
+    },
+	  color:{
+		  type: String,
+		  default: ""
+	  }
   },
   name: "BarchartComponent",
   data() {

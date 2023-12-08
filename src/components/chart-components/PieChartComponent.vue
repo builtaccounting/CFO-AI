@@ -1,5 +1,5 @@
 <template>
-	<v-card flat color="blue lighten-5" class="pa-2">
+	<v-card flat :color="color + ' lighten-5'" class="pa-2">
 		<apexchart type="pie" width="480" :options="chartOptions" :series="series"></apexchart>
 	</v-card>
 </template>
@@ -15,6 +15,10 @@ export default defineComponent({
 		title: {
 			type: String,
 			default: ""
+		},
+		color:{
+			type: String,
+      default: ""
 		}
 	},
 	name: "PieChartComponent",
