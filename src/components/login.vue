@@ -139,7 +139,7 @@ export default {
             password: this.password,
           };
 
-          axios.post("/api/auth/v2/login", formdata,)
+          axios.post("/api/auth/login", formdata,)
               .then((user) => {
 
                 this.loading = false;

@@ -106,7 +106,7 @@
           CFO
           <span class="yellow--text">AI<sup><v-icon color="yellow" class="ma-0" style="left:-3px"
                                                     small>mdi-shimmer</v-icon></sup></span></v-toolbar-title>
-        <v-btn @click="$store.state.sidebarOpen=true" v-if="$route.path !='/'" to="/" class="ml-4" x-large rounded
+        <v-btn @click="$store.state.sidebarOpen=true" v-if="$route.path !=='/'" to="/" class="ml-4" x-large rounded
                depressed color="yellow" light><v-icon>mdi-apps</v-icon> Dash</v-btn>
 
 				<v-spacer></v-spacer>
@@ -115,8 +115,9 @@
             @click="showLogoutDialog=true"
             color="blue darken-4"
             class="white--text text-capitalize fw-bold"
-            small
             rounded
+            x-large
+            depressed
         >
 					<v-icon color="white" small>mdi-logout</v-icon>
 					Log out
@@ -433,13 +434,11 @@ export default {
       switch (color) {
         case "green":
           return require("../public/img/reportBgGreen.png");
-          // case "blue2":
-          // 	return require("../public/img/reportBgBlue2.png");
         case "red":
           return require("../public/img/reportBgRed.png");
         case "yellow":
           return require("../public/img/reportBgYellow.png");
-        default:
+	      case "blue":
           return require("../public/img/reportBgDefault.png");
       }
 
@@ -453,13 +452,12 @@ export default {
     this.getReports();
 
     this.bgColors = [
-      'default',
-      // "blue2",
+      'blue',
       "green",
       "yellow",
       "red",
     ];
-    this.templateColor = 'default';
+    this.templateColor = 'blue';
   },
   sockets: {
     connect() {
