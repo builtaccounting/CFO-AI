@@ -259,19 +259,20 @@
               </v-col>
               <v-col cols="12">
                 <h5 class="fw-medium">Choose a template color</h5>
-                <div class="overflow-y-auto d-flex align-center text-center" style="height: 150px">
-                  <v-sheet v-for="(item, idx) in bgColors" :key="idx" class="mr-2 py-2 sheet"
-                           style="cursor: pointer; font-size: 0.4rem"
-                           @click="setReportColor(item)" height="50" width="200" rounded
-                           :style="
-												          `background-image: url(${backgroundImage(item)});`
-																">
-                    <p class="fw-bold text-center white--text text--lighten-1 text-uppercase" style="font-size: 0.5rem">{{
-		                    item
-	                    }}</p>
+								<v-color-picker v-model="currentColor" :show-swatches="true" @change="changeColor"></v-color-picker>
+<!--                <div class="overflow-y-auto d-flex align-center text-center" style="height: 150px">-->
+<!--                  <v-sheet v-for="(item, idx) in bgColors" :key="idx" class="mr-2 py-2 sheet"-->
+<!--                           style="cursor: pointer; font-size: 0.4rem"-->
+<!--                           @click="setReportColor(item)" height="50" width="200" rounded-->
+<!--                           :style="-->
+<!--												          `background-image: url(${backgroundImage(item)});`-->
+<!--																">-->
+<!--                    <p class="fw-bold text-center white&#45;&#45;text text&#45;&#45;lighten-1 text-uppercase" style="font-size: 0.5rem">{{-->
+<!--		                    item-->
+<!--	                    }}</p>-->
 
-                  </v-sheet>
-                </div>
+<!--                  </v-sheet>-->
+<!--                </div>-->
               </v-col>
               <v-btn color="blue darken-4" class="white--text text-capitalize my-5 mx-auto fw-bold" rounded depressed>Save Changes</v-btn>
 
@@ -396,11 +397,14 @@ export default {
 				name: this.filename ? this.filename : this.report.name.split(':')[0],
 				color: this.report.color
 			})
+			console.log("here")
+			this.currentColor = this.reportColorHex(this.report.color);
 			this.settingsDialog = false;
 		},
 		setReportColor(color) {
 			this.report.color = color
-			axios.patch(`/api/management-reports/${this.report.uuid}`, {color: color})
+			this.currentColor = this.reportColorHex(this.report.color);
+			axios.patch(`/api/management-reports/${this.report.id}`, {color: color})
 		},
 		backgroundImage(image) {
 			switch (image) {
@@ -435,13 +439,11 @@ export default {
 					this.currentColor = '#0D47A1'
 					return  '#0D47A1'
 			}
+		},
+		changeColor() {
+			console.log(this.currentColor)
+
 		}
-	},
-	created() {
-		eventBus.$on("open-report", (doc) => {
-			console.log(doc + " from report template");
-			this.doc = doc;
-		});
 	},
 	mounted() {
 		this.$store.state.sidebarOpen = false
@@ -450,8 +452,6 @@ export default {
 
 		if (this.report) {
 			this.filename = this.report.name.split(':')[0]
-			this.$store.commit('COMMIT_CHART_TRANSFORMATION', this.$store.state.currentReport)
-
 		}
 	},
 	computed: {
@@ -483,6 +483,14 @@ export default {
 			this.filename = newReport.name.split(':')[0]
 			// console.log(newReport);
 		},
+
+		currentColor(newColor) {
+			// axios.patch(`/api/management-reports/${this.report.uuid}`, {
+			// 	name: this.filename ? this.filename : this.report.name.split(':')[0],
+			// 	color: newColor
+			// })
+			this.setReportColor(newColor)
+		}
 	},
 };
 </script>
