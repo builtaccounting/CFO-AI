@@ -20,44 +20,15 @@
       >
 
 
+
+        <!--      COVER PAGE-->
 	      <report-background
 		      :report="report"
 		      class="w-100"
-	      :color="report.color"
+		      :color="report.color"
+		      page="cover"
 	      ></report-background>
 
-        <!--      COVER PAGE-->
-<!--        <main class="rounded mx-auto" id="main" :style="`background-image: url(${backgroundImage(report.color)});`">-->
-<!--          <img-->
-<!--	          src="../../../public/img/projections.svg"-->
-<!--	          alt=""-->
-<!--	          height="200px"-->
-<!--	          style="position: absolute; bottom: 0; left: 0"-->
-<!--          />-->
-<!--          <section>-->
-<!--            <img-->
-<!--	            alt="company_logo"-->
-<!--	            :src="report.business_logo"-->
-<!--	            class="rounded-pill pa-2 ml-10"-->
-<!--	            height="100"-->
-<!--            />-->
-<!--            <h1-->
-<!--	            class="text-uppercase font-weight-bold nanum white pa-1"-->
-<!--	            style="font-size: 2rem"-->
-<!--            >-->
-<!--              Management Report-->
-<!--            </h1>-->
-<!--            <h3 class="my-2">-->
-<!--              <strong class="white pa-1 nanum" style="font-size: 1.5rem">{{-->
-<!--		              report.business_name-->
-<!--	              }}</strong><br/>-->
-
-<!--            </h3>-->
-<!--            <small class="nanum white pa-1 font-italic" style="font-size: 1.3rem">{{-->
-<!--		            report.name.split(":")[1]-->
-<!--	            }}</small>-->
-<!--          </section>-->
-<!--        </main>-->
 	      <!--	    OTHER PAGES-->
         <div
 	        v-for="(page, idx) in report.pages"
@@ -146,27 +117,8 @@
           </v-row>
         </div>
 	      <!--	    THANK YOU PAGE-->
-        <main class="ma-5 pa-10 rounded mx-auto" :style="`background-image: url(${backgroundImage(report.color)});`">
-          <img
-	          src="/img/thanks.svg"
-	          alt=""
-	          height="200px"
-	          style="position: absolute; bottom: 0; left: 0"
-          />
-          <section style="top: 50%; left: 60%">
-            <img
-	            alt="company_logo"
-	            src="/img/done.svg"
-	            class="rounded-pill"
-	            height="50"
-            />
-            <h1 class="text-uppercase font-weight-bold nanum">Thank You</h1>
-            <h4>
-              Powered By
-              <strong class="font-weight-bold">Built Accounting AI</strong>
-            </h4>
-          </section>
-        </main>
+        <report-background page="end" :color="report.color" class="w-100" :report="report"
+        ></report-background>
       </v-container>
 
 
@@ -260,21 +212,9 @@
               <v-col cols="12">
                 <h5 class="fw-medium">Choose a template color</h5>
 								<v-color-picker v-model="currentColor" :show-swatches="true" @change="changeColor"></v-color-picker>
-<!--                <div class="overflow-y-auto d-flex align-center text-center" style="height: 150px">-->
-<!--                  <v-sheet v-for="(item, idx) in bgColors" :key="idx" class="mr-2 py-2 sheet"-->
-<!--                           style="cursor: pointer; font-size: 0.4rem"-->
-<!--                           @click="setReportColor(item)" height="50" width="200" rounded-->
-<!--                           :style="-->
-<!--												          `background-image: url(${backgroundImage(item)});`-->
-<!--																">-->
-<!--                    <p class="fw-bold text-center white&#45;&#45;text text&#45;&#45;lighten-1 text-uppercase" style="font-size: 0.5rem">{{-->
-<!--		                    item-->
-<!--	                    }}</p>-->
-
-<!--                  </v-sheet>-->
-<!--                </div>-->
               </v-col>
-              <v-btn color="blue darken-4" class="white--text text-capitalize my-5 mx-auto fw-bold" rounded depressed>Save Changes</v-btn>
+              <v-btn color="blue darken-4" class="white--text text-capitalize my-5 mx-auto fw-bold" rounded depressed
+                     @click="updateSettings">Save Changes</v-btn>
 
 
             </v-row>
@@ -312,7 +252,6 @@ import {
 	TextColor,
 	Underline,
 } from "element-tiptap";
-import eventBus from "@/utils";
 import DocumentLoadingComponent from "@/components/DocumentLoadingComponent.vue";
 import BarchartComponent from "@/components/chart-components/BarchartComponent.vue";
 import PieChartComponent from "@/components/chart-components/PieChartComponent.vue";
@@ -397,8 +336,7 @@ export default {
 				name: this.filename ? this.filename : this.report.name.split(':')[0],
 				color: this.report.color
 			})
-			console.log("here")
-			this.currentColor = this.reportColorHex(this.report.color);
+			this.currentColor = this.report.color
 			this.settingsDialog = false;
 		},
 		setReportColor(color) {
@@ -425,19 +363,19 @@ export default {
 			switch (color) {
 				case  'green':
 					this.currentColor = '#0097B2'
-					return  '#0097B2'
+					return '#0097B2'
 				case  'yellow':
 					this.currentColor = '#FFDE59'
-					return  '#FFDE59'
+					return '#FFDE59'
 				case 'red':
 					this.currentColor = '#9E283C'
-					return  '#9E283C'
+					return '#9E283C'
 				case 'blue':
 					this.currentColor = '#0D47A1'
-					return  '#0D47A1'
+					return '#0D47A1'
 				default:
 					this.currentColor = '#0D47A1'
-					return  '#0D47A1'
+					return '#0D47A1'
 			}
 		},
 		changeColor() {
@@ -485,11 +423,7 @@ export default {
 		},
 
 		currentColor(newColor) {
-			// axios.patch(`/api/management-reports/${this.report.uuid}`, {
-			// 	name: this.filename ? this.filename : this.report.name.split(':')[0],
-			// 	color: newColor
-			// })
-			this.setReportColor(newColor)
+			this.report.color = newColor
 		}
 	},
 };
