@@ -119,14 +119,14 @@ export default {
 			alt=""
 			height="200px"
 			style="position: absolute; bottom: 0; left: 0"/>
-			<section style="top: 50%; left: 60%">
+			<section style="top: 50%; left: 60%" class="py-5">
 			 <img
-			  alt="company_logo"
+			  alt="done"
 			  src="/img/done.svg"
 			  class="rounded-pill"
 			  height="50"
 			   />
-				<h1 class="text-uppercase font-weight-bold nanum">Thank You</h1>
+				<h1 class="text-uppercase font-weight-bold handwritten">Thank You</h1>
         <h4>
           Powered By
           <strong class="font-weight-bold">Built Accounting AI</strong>

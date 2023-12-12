@@ -61,7 +61,7 @@
               :key="doc.name"
              style="mx-height: 80dvh; overflow:auto"
               link
-              :to="`/reports/${doc.id}`"
+              :to="`/reports/${doc.uuid}`"
               two-line
 
           >

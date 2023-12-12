@@ -18,9 +18,6 @@
 	      v-if="report"
 
       >
-
-
-
         <!--      COVER PAGE-->
 	      <report-background
 		      :report="report"
@@ -116,8 +113,13 @@
             </v-col>
           </v-row>
         </div>
+
 	      <!--	    THANK YOU PAGE-->
-        <report-background page="end" :color="report.color" class="w-100" :report="report"
+        <report-background
+	        page="end"
+	        :color="report.color"
+	        class="w-100"
+	        :report="report"
         ></report-background>
       </v-container>
 
@@ -213,7 +215,7 @@
                 <h5 class="fw-medium">Choose a template color</h5>
 								<v-color-picker v-model="currentColor" :show-swatches="true" @change="changeColor"></v-color-picker>
               </v-col>
-              <v-btn color="blue darken-4" class="white--text text-capitalize my-5 mx-auto fw-bold" rounded depressed
+              <v-btn :color="currentColor" class="white--text text-capitalize my-5 mx-auto fw-bold mt-5" rounded depressed
                      @click="updateSettings">Save Changes</v-btn>
 
 
@@ -342,7 +344,7 @@ export default {
 		setReportColor(color) {
 			this.report.color = color
 			this.currentColor = this.reportColorHex(this.report.color);
-			axios.patch(`/api/management-reports/${this.report.id}`, {color: color})
+			axios.patch(`/api/management-reports/${this.report.uuid}`, {color: color})
 		},
 		backgroundImage(image) {
 			switch (image) {
