@@ -133,9 +133,6 @@ export default {
         </h4>
         </section>`
 		}
-	},
-	mounted() {
-		console.log(this.imgSRC);
 	}
 }
 </script>

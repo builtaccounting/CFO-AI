@@ -53,13 +53,13 @@
             v-if="loading"
         ></v-skeleton-loader>
 
-				<v-list v-else >
+				<v-list v-else>
 					<v-list-item
               color="blue"
               class="rounded-lg white mt-3"
               v-for="doc in reports"
               :key="doc.name"
-             style="mx-height: 80dvh; overflow:auto"
+              style="mx-height: 80dvh; overflow:auto"
               link
               :to="`/reports/${doc.uuid}`"
               two-line
@@ -67,9 +67,10 @@
           >
             <v-list-item-avatar
                 rounded
-                :color="doc.color === 'default' ?  'blue lighten-5' : doc.color+' lighten-5' ">
+                :color="doc.color"
+            >
 
-              <v-icon :color="doc.color==='default' ? 'blue' : doc.color">mdi-shimmer</v-icon>
+              <v-icon color="white">mdi-shimmer</v-icon>
 
             </v-list-item-avatar>
             <v-list-item-content>
@@ -77,7 +78,7 @@
             <v-list-item-title>
 						{{ doc.name.split(":")[0] }}
             </v-list-item-title>
-            <v-list-item-subtitle>{{doc.period.replaceAll("_"," ")}}</v-list-item-subtitle>
+            <v-list-item-subtitle>{{ doc.period.replaceAll("_", " ") }}</v-list-item-subtitle>
             </v-list-item-content>
 
             <v-list-item-action class="text-right">
@@ -167,38 +168,12 @@
 
 
               <label>Select A theme color</label>
-               <v-radio-group v-model="templateColor">
-              <v-row>
+              	<v-color-picker
+                    class="w-100"
+                    v-model="templateColor"
+                    :show-swatches="true"
+                ></v-color-picker>
 
-              <v-col
-                  v-for="(item, idx) in bgColors"
-                  :key="idx"
-                  cols="12" sm="3">
-      <v-radio
-
-          :label="`Radio ${item}`"
-          :value="item"
-          active-class="grey lighten-4 pa-3 "
-          style="transition: 0.2s ease-in-out; border-radius: 15px;"
-          on-icon="mdi-check"
-          class="border"
-          :off-icon="null"
-          :disabled="loading"
-      >
-        <template v-slot:label>
-
-          <v-avatar size="40" rounded>
-            <v-img :src="backgroundImage(item)">
-
-            </v-img>
-          </v-avatar>
-        </template>
-      </v-radio>
-              </v-col>
-              </v-row>
-
-
-    </v-radio-group>
               </v-form>
               <div v-else class="text-center">
 
@@ -267,7 +242,7 @@ import eventBus from "@/utils";
 
 export default {
   name: "App",
-	components: {},
+  components: {},
   data() {
     return {
       showLogoutDialog: false,
@@ -314,8 +289,8 @@ export default {
           value: "this_month",
         },
         {
-          name: "Last two weeks",
-          value: "last_two_weeks",
+          name: "Last week",
+          value: "last_week",
         },
         {
           name: "This week",
@@ -332,7 +307,7 @@ export default {
       showSnackbar: false,
       snackbarType: null,
       snackbarMsg: "",
-      templateColor: null,
+      templateColor: "#0D47A1",
       bgColors: [],
 
     };
@@ -381,7 +356,7 @@ export default {
       axios.get("/api/management-reports")
           .then(res => {
             this.reports = res.data.data;
-						eventBus.$emit("getReports", res.data.data);
+            eventBus.$emit("getReports", res.data.data);
             this.loading = false;
           })
     },
@@ -418,7 +393,7 @@ export default {
               this.creating = false;
               this.reporting = false;
 
-              const URL = "/reports/" + res.data.data.id;
+              const URL = "/reports/" + res.data.data.uuid;
 
               this.$router.push({path: URL});
 
@@ -438,7 +413,7 @@ export default {
           return require("../public/img/reportBgRed.png");
         case "yellow":
           return require("../public/img/reportBgYellow.png");
-	      case "blue":
+        case "blue":
           return require("../public/img/reportBgDefault.png");
       }
 
