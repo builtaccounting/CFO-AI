@@ -9,7 +9,7 @@
       <v-toolbar-title
           class="text-center fw-bold text-uppercase nanum"
           style="font-size: 2rem"
-      >{{ report.name.split(":")[0] }}
+      >{{ reportName }}
       </v-toolbar-title>
       <!--	  DOCUMENT DISPLAY-->
       <v-container
@@ -182,9 +182,9 @@
         color="grey lighten-4"
     >
       <template v-slot:prepend>
-        <v-list-item two-line>
+        <v-list-item two-line :style="{'color': 'white', 'background-color': report.color}" class="fw-bold">
           <v-list-item-content>
-            <v-list-item-title>Edit Document</v-list-item-title>
+            <v-list-item-title >Edit Document</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -209,6 +209,7 @@
                     label="File name"
                     required
                     style="font-size: 0.8rem"
+                    class="mb-5"
                 ></v-text-field>
 
                 <h5 class="fw-medium">Choose a template color</h5>
@@ -216,12 +217,14 @@
                     v-if="report"
                     v-model="report.color"
                     :show-swatches="true"
+                    class="mt-3"
+                    :hide-inputs="true"
                 ></v-color-picker>
               </v-col>
               <v-btn
                   v-if="report"
                   :color="report.color"
-                  class="white--text text-capitalize my-5 mx-auto fw-bold mt-5"
+                  class="white--text text-capitalize my-5 mx-auto fw-bold"
                   rounded
                   depressed
                   @click="updateSettings">Save Changes</v-btn>
@@ -267,6 +270,7 @@ import BarchartComponent from "@/components/chart-components/BarchartComponent.v
 import PieChartComponent from "@/components/chart-components/PieChartComponent.vue";
 import MixLineChartComponent from "@/components/chart-components/MixLineChartComponent.vue";
 import ReportBackground from "@/components/ReportBackground.vue";
+import eventBus from "@/utils";
 
 export default {
   name: "ReportTemplate",
@@ -345,6 +349,7 @@ export default {
         name: this.filename ? this.filename : this.report.name.split(':')[0],
         color: this.report.color
       })
+	    eventBus.$emit('update-report-settings', this.report);
       this.currentColor = this.report.color
       this.settingsDialog = false;
     },
@@ -416,9 +421,12 @@ export default {
         "yellow",
         "red",
       ];
-    }
+    },
 
 
+	  reportName() {
+			return this.report.name
+	  }
   },
   watch: {
 

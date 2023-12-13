@@ -58,7 +58,7 @@
               color="blue"
               class="rounded-lg white mt-3"
               v-for="doc in reports"
-              :key="doc.name"
+              :key="doc.uuid"
               style="mx-height: 80dvh; overflow:auto"
               link
               :to="`/reports/${doc.uuid}`"
@@ -317,14 +317,11 @@ export default {
     eventBus() {
       return eventBus;
     },
+	  docColor() {
+			return this.doc.color
+	  }
   },
   watch: {
-    isLedgerMode() {
-      this.isReportMode = !this.isLedgerMode;
-    },
-    isReportMode() {
-      this.isLedgerMode = !this.isReportMode;
-    },
     fileToUpload() {
       this.fileName = this.fileToUpload.name.split(".")[0];
     },
@@ -432,12 +429,11 @@ export default {
       "yellow",
       "red",
     ];
-    this.templateColor = 'blue';
-  },
-  sockets: {
-    connect() {
-      console.log("Connected to Built socket...");
-    },
+	  eventBus.$on('update-report-settings', (report) => {
+			this.templateColor = report.color;
+		  this.getReports();
+	  });
+
   },
 };
 </script>
