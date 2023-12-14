@@ -110,7 +110,7 @@ export default {
 			<h3 class="my-2">
 			<strong class="white pa-1 " style="font-size: 1.2rem">${this.report.business_name}</strong><br/>
 			</h3>
-			<small class=" white pa-1 font-italic" style="font-size: 1.3rem">${this.report.from.split('T')[0]} - ${this.report.to.split('T')[0]}
+			<small class=" white pa-1 font-italic" style="font-size: 1rem">${this.report.from.split('T')[0]} - ${this.report.to.split('T')[0]}
 			</small>
 			</section>`
 				:

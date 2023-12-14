@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="red">
+  <div id="app" class="">
     <v-app id="inspire">
       <v-overlay color="white"
                  opacity="1" v-if="$store.state.initializing">
@@ -213,7 +213,7 @@
 			<v-snackbar :color="snackbarType" v-model="showSnackbar"
       >{{ snackbarMsg }}
 			</v-snackbar>
-
+			<v-snackbar v-model="$store.state.showGeneralMessage" :timeout="5000" color="green">{{$store.state.generalMessage}}</v-snackbar>
       </span>
 
 

@@ -11,7 +11,9 @@ export default new Vuex.Store({
         initializing: false,
         isLoggedIn: false,
         currentReport: null,
-        sidebarOpen: true
+        sidebarOpen: true,
+        showGeneralMessage: false,
+        generalMessage: ''
     },
     getters: {
         getExistingFile: (state) => (name) => {

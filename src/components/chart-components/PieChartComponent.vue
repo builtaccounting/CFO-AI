@@ -36,6 +36,9 @@ export default defineComponent({
 					width: 380,
 					type: 'pie',
 				},
+				legend: {
+					position: 'bottom'
+				},
 				colors: ['#FF5733', '#33FF57', '#5733FF', '#FFC933', '#33FFC9', '#C933FF', '#FF33C9', '#C9FF33', '#33C9FF', '#FF5733', '#a4b3ff', '#E91E63'],
 				labels: this.labels,
 				responsive: [{
@@ -44,9 +47,7 @@ export default defineComponent({
 						chart: {
 							width: 200
 						},
-						legend: {
-							position: 'bottom'
-						}
+
 					}
 				}]
 			}

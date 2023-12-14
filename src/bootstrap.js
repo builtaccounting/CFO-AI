@@ -1,5 +1,6 @@
 import axios from "axios";
 import {getAccessToken} from "@/utils";
+import store from "@/store";
 
 window.axios = axios;
 
@@ -45,6 +46,27 @@ axios.interceptors.response.use(
             }
 
         }
+
+      if (error.response.status === 302) {
+
+        store.state.generalMessage = {
+          message: error.response.data,
+          errors: {}
+        };
+
+        store.state.showGeneralMessage = false;
+        store.state.showGeneralMessage = true;
+      }
+
+      /**
+       * Automatically throw 422 errors
+       */
+      //
+      if (error.response.status === 422) {
+        store.state.generalMessage = error.response.data;
+        store.state.showGeneralMessage = false;
+        store.state.showGeneralMessage = true;
+      }
 
 
      return  Promise.reject(error);
