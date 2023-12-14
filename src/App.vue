@@ -1,5 +1,5 @@
 <template>
-  <div id="app" class="red">
+  <div id="app" class="">
     <v-app id="inspire">
       <v-overlay color="white"
                  opacity="1" v-if="$store.state.initializing">
@@ -58,7 +58,7 @@
               color="blue"
               class="rounded-lg white mt-3"
               v-for="doc in reports"
-              :key="doc.name"
+              :key="doc.uuid"
               style="mx-height: 80dvh; overflow:auto"
               link
               :to="`/reports/${doc.uuid}`"
@@ -167,11 +167,12 @@
                 ></v-autocomplete>
 
 
-              <label>Select A theme color</label>
+              <label >Select a theme color</label>
               	<v-color-picker
-                    class="w-100"
+                    class="w-100 mt-3"
                     v-model="templateColor"
                     :show-swatches="true"
+                    :hide-inputs="true"
                 ></v-color-picker>
 
               </v-form>
@@ -212,7 +213,7 @@
 			<v-snackbar :color="snackbarType" v-model="showSnackbar"
       >{{ snackbarMsg }}
 			</v-snackbar>
-
+			<v-snackbar v-model="$store.state.showGeneralMessage" :timeout="5000" color="green">{{$store.state.generalMessage}}</v-snackbar>
       </span>
 
 
@@ -222,11 +223,12 @@
       >
         <v-card>
           <v-card-title>Confirm logout</v-card-title>
+	        <v-divider class="mb-5"></v-divider>
           <v-card-text>
             <h3 class="red--text">Do you want to logout?</h3>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed>Yes, Logout
+            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed class="text-capitalize">Yes, Logout
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -317,14 +319,11 @@ export default {
     eventBus() {
       return eventBus;
     },
+	  docColor() {
+			return this.doc.color
+	  }
   },
   watch: {
-    isLedgerMode() {
-      this.isReportMode = !this.isLedgerMode;
-    },
-    isReportMode() {
-      this.isLedgerMode = !this.isReportMode;
-    },
     fileToUpload() {
       this.fileName = this.fileToUpload.name.split(".")[0];
     },
@@ -432,12 +431,11 @@ export default {
       "yellow",
       "red",
     ];
-    this.templateColor = 'blue';
-  },
-  sockets: {
-    connect() {
-      console.log("Connected to Built socket...");
-    },
+	  eventBus.$on('update-report-settings', (report) => {
+			this.templateColor = report.color;
+		  this.getReports();
+	  });
+
   },
 };
 </script>
