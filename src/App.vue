@@ -167,11 +167,12 @@
                 ></v-autocomplete>
 
 
-              <label>Select A theme color</label>
+              <label >Select a theme color</label>
               	<v-color-picker
-                    class="w-100"
+                    class="w-100 mt-3"
                     v-model="templateColor"
                     :show-swatches="true"
+                    :hide-inputs="true"
                 ></v-color-picker>
 
               </v-form>
@@ -222,11 +223,12 @@
       >
         <v-card>
           <v-card-title>Confirm logout</v-card-title>
+	        <v-divider class="mb-5"></v-divider>
           <v-card-text>
             <h3 class="red--text">Do you want to logout?</h3>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed>Yes, Logout
+            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed class="text-capitalize">Yes, Logout
             </v-btn>
           </v-card-actions>
         </v-card>

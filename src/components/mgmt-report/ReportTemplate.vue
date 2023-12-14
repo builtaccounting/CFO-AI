@@ -40,7 +40,7 @@
             <v-col cols="12">
                 <h2
                     style="border-radius: 255px 15px 225px 15px/15px 225px 15px 255px"
-                    class="font-weight-bold black--text nanum mt-6"
+                    class="font-weight-bold black--text mt-6"
                     id="one"
                     :style=" {
 										  'border': 'solid 10px ' + report.color,
