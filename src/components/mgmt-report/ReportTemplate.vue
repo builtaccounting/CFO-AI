@@ -240,6 +240,8 @@
 
     </v-navigation-drawer>
 
+	  <v-snackbar v-model="showSnackbar" :timeout="5000" color="green">{{snackbarText}}</v-snackbar>
+
   </span>
 
 
@@ -298,7 +300,9 @@ export default {
       doc: null,
       settingsDialog: false,
       filename: '',
-      currentColor: ''
+      currentColor: '',
+	    showSnackbar: false,
+	    snackbarText: ''
     };
   },
   components: {
@@ -352,6 +356,8 @@ export default {
 	    eventBus.$emit('update-report-settings', this.report);
       this.currentColor = this.report.color
       this.settingsDialog = false;
+			this.showSnackbar = true
+	    this.snackbarText = 'Report settings updated'
     },
     setReportColor(color) {
       this.report.color = color
