@@ -1,6 +1,6 @@
 <template>
 	<v-card flat :color="color" class="pa-2">
-		<apexchart type="pie" width="480" :options="chartOptions" :series="series"></apexchart>
+		<apexchart type="pie" :options="chartOptions" :series="series"></apexchart>
 	</v-card>
 </template>
 
@@ -31,21 +31,21 @@ export default defineComponent({
 		chartOptions() {
 
 			return {
-
 				chart: {
-					width: 380,
+					width: 600,
 					type: 'pie',
 				},
-				legend: {
-					position: 'bottom'
-				},
+        legend: {
+          position: 'bottom'
+        },
+
 				colors: ['#FF5733', '#33FF57', '#5733FF', '#FFC933', '#33FFC9', '#C933FF', '#FF33C9', '#C9FF33', '#33C9FF', '#FF5733', '#a4b3ff', '#E91E63'],
 				labels: this.labels,
 				responsive: [{
-					breakpoint: 480,
+					breakpoint: 200,
 					options: {
 						chart: {
-							width: 200
+							width: 600
 						},
 
 					}
@@ -70,11 +70,11 @@ export default defineComponent({
 			let series = [];
 			let labels = [];
 
-			if (this.data.periods) {
-				const months = Object.keys(this.data.periods);
+			if (this.data.accounts) {
+				const months = Object.keys(this.data.accounts);
 
 				months.forEach(month => {
-					series.push(this.data.periods[month]);
+					series.push(this.data.accounts[month]);
 					labels.push(month)
 
 				})
