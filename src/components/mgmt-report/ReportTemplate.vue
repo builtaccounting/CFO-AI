@@ -7,8 +7,8 @@
   <span v-else>
     <div class="mx-auto grey lighten-4" v-if="report">
       <v-toolbar-title
-          class="text-center fw-bold text-uppercase nanum"
-          style="font-size: 2rem"
+          class="text-center fw-bold text-capitalize"
+          style="font-size: 1.5rem"
       >{{ reportName }}
       </v-toolbar-title>
       <!--	  DOCUMENT DISPLAY-->
@@ -184,7 +184,7 @@
       <template v-slot:prepend>
         <v-list-item two-line :style="{'color': 'white', 'background-color': report.color}" class="fw-bold">
           <v-list-item-content>
-            <v-list-item-title >Edit Document</v-list-item-title>
+            <v-list-item-title >Edit Report</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -357,7 +357,7 @@ export default {
       this.currentColor = this.report.color
       this.settingsDialog = false;
 			this.showSnackbar = true
-	    this.snackbarText = 'Report settings updated'
+	    this.snackbarText = 'Report updated'
     },
     setReportColor(color) {
       this.report.color = color

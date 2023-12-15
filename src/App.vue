@@ -473,4 +473,13 @@ export default {
   transition: all 0.5s ease-in-out 0s;
   transform: scale(1.05);
 }
+
+svg text {
+	fill: white !important;
+}
+
+.apexcharts-legend-text {
+	color: white !important;
+	fill: white !important;
+}
 </style>
