@@ -34,11 +34,13 @@ export default defineComponent({
 				chart: {
 					width: 550,
 					type: 'pie',
+					toolbar: {
+						show: false,
+					},
 				},
         legend: {
           position: 'bottom'
         },
-
 				colors: ['#FF5733', '#33FF57', '#5733FF', '#FFC933', '#33FFC9', '#C933FF', '#FF33C9', '#C9FF33', '#33C9FF', '#FF5733', '#a4b3ff', '#E91E63'],
 				labels: this.labels,
 				responsive: [{
@@ -76,7 +78,6 @@ export default defineComponent({
 				months.forEach(month => {
 					series.push(this.data.periods[month]);
 					labels.push(month)
-
 				})
 
 			}
