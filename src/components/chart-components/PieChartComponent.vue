@@ -32,7 +32,7 @@ export default defineComponent({
 
 			return {
 				chart: {
-					width: 600,
+					width: 550,
 					type: 'pie',
 				},
         legend: {
@@ -70,11 +70,11 @@ export default defineComponent({
 			let series = [];
 			let labels = [];
 
-			if (this.data.accounts) {
-				const months = Object.keys(this.data.accounts);
+			if (this.data.periods) {
+				const months = Object.keys(this.data.periods);
 
 				months.forEach(month => {
-					series.push(this.data.accounts[month]);
+					series.push(this.data.periods[month]);
 					labels.push(month)
 
 				})
