@@ -32,13 +32,15 @@ export default defineComponent({
 
 			return {
 				chart: {
-					width: 600,
+					width: 550,
 					type: 'pie',
+					toolbar: {
+						show: false,
+					},
 				},
         legend: {
           position: 'bottom'
         },
-
 				colors: ['#FF5733', '#33FF57', '#5733FF', '#FFC933', '#33FFC9', '#C933FF', '#FF33C9', '#C9FF33', '#33C9FF', '#FF5733', '#a4b3ff', '#E91E63'],
 				labels: this.labels,
 				responsive: [{
@@ -70,13 +72,12 @@ export default defineComponent({
 			let series = [];
 			let labels = [];
 
-			if (this.data.accounts) {
+			if (this.data.periods) {
 				const months = Object.keys(this.data.accounts);
 
 				months.forEach(month => {
 					series.push(this.data.accounts[month]);
 					labels.push(month)
-
 				})
 
 			}

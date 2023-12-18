@@ -7,8 +7,8 @@
   <span v-else>
     <div class="mx-auto grey lighten-4" v-if="report">
       <v-toolbar-title
-          class="text-center fw-bold text-uppercase nanum"
-          style="font-size: 2rem"
+          class="text-center fw-bold text-capitalize"
+          style="font-size: 1.5rem"
       >{{ reportName }}
       </v-toolbar-title>
       <!--	  DOCUMENT DISPLAY-->
@@ -107,9 +107,18 @@
                   :data="page.data"
                   :title="page.main_title"
               ></barchart-component>
+            </v-col>
 
-
-
+            <v-col
+                cols="12"
+                   v-if="['general_administrative_expenses'].includes(page.slug)"
+            >
+              <grouped-bars-component
+                  v-if="report"
+                  :data="page.data"
+                  :title="page.main_title"
+                  :color="report.color"
+              ></grouped-bars-component>
             </v-col>
           </v-row>
         </div>
@@ -184,14 +193,14 @@
       <template v-slot:prepend>
         <v-list-item two-line :style="{'color': 'white', 'background-color': report.color}" class="fw-bold">
           <v-list-item-content>
-            <v-list-item-title >Edit Document</v-list-item-title>
+            <v-list-item-title>Edit Report</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
 
       <v-divider></v-divider>
 
-      <v-row class="pa-5">
+      <v-row dense class="pa-5">
         <v-col cols="12">
 
           <v-form @submit.prevent="updateSettings">
@@ -240,7 +249,7 @@
 
     </v-navigation-drawer>
 
-	  <v-snackbar v-model="showSnackbar" :timeout="5000" color="green">{{snackbarText}}</v-snackbar>
+	  <v-snackbar v-model="showSnackbar" :timeout="5000" color="green">{{ snackbarText }}</v-snackbar>
 
   </span>
 
@@ -273,6 +282,7 @@ import PieChartComponent from "@/components/chart-components/PieChartComponent.v
 import MixLineChartComponent from "@/components/chart-components/MixLineChartComponent.vue";
 import ReportBackground from "@/components/ReportBackground.vue";
 import eventBus from "@/utils";
+import GroupedBarsComponent from "@/components/chart-components/GroupedBarsComponent.vue";
 
 export default {
   name: "ReportTemplate",
@@ -301,11 +311,12 @@ export default {
       settingsDialog: false,
       filename: '',
       currentColor: '',
-	    showSnackbar: false,
-	    snackbarText: ''
+      showSnackbar: false,
+      snackbarText: ''
     };
   },
   components: {
+    GroupedBarsComponent,
     ReportBackground,
     MixLineChartComponent,
     PieChartComponent,
@@ -353,11 +364,11 @@ export default {
         name: this.filename ? this.filename : this.report.name.split(':')[0],
         color: this.report.color
       })
-	    eventBus.$emit('update-report-settings', this.report);
+      eventBus.$emit('update-report-settings', this.report);
       this.currentColor = this.report.color
       this.settingsDialog = false;
-			this.showSnackbar = true
-	    this.snackbarText = 'Report settings updated'
+      this.showSnackbar = true
+      this.snackbarText = 'Report updated'
     },
     setReportColor(color) {
       this.report.color = color
@@ -430,9 +441,9 @@ export default {
     },
 
 
-	  reportName() {
-			return this.report.name
-	  }
+    reportName() {
+      return this.report.name
+    }
   },
   watch: {
 

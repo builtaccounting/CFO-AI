@@ -2,10 +2,11 @@
   <v-card flat :color="color" class="pa-2 full-height" >
 
 
-      <apexchart  height="350" :options="chartOptions" :series="series"></apexchart>
+
+		<apexchart height="350" :options="chartOptions" :series="series"></apexchart>
 
 
-  </v-card>
+	</v-card>
 
 </template>
 
@@ -13,123 +14,121 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-  props: {
-    title: {
-      type: String,
-      defaults: ""
-    },
-    data: {
-      type: Object
-    },
-	  color:{
-		  type: String,
-		  default: ""
-	  }
-  },
-  name: "MixLineChartComponent",
-  data() {
-    return {
+	props: {
+		title: {
+			type: String,
+			defaults: ""
+		},
+		data: {
+			type: Object
+		},
+		color: {
+			type: String,
+			default: ""
+		}
+	},
+	name: "MixLineChartComponent",
+	data() {
+		return {}
+	},
+	computed: {
 
 
+		chartOptions() {
 
-    }
-  },
-  computed: {
+			return {
 
+				chart: {
+					type: 'line',
+					toolbar: {
+						show: false,
+					},
+				},
+				stroke: {
+					width: [4, 4]
+				},
 
-    chartOptions() {
+				labels: this.labels,
+				xaxis: {
+					type: 'category'
+				},
+				yaxis: [{
+					show: false
+				}]
 
-      return {
+			}
 
-        chart: {
-          type: 'line'
-
-        },
-        stroke: {
-          width: [4, 4]
-        },
-
-        labels: this.labels,
-        xaxis: {
-          type: 'category'
-        },
-        yaxis: [{
-          show: false
-        }]
-
-      }
-
-    },
+		},
 
 
-    labels() {
+		labels() {
 
-      return Object.keys(this.data.net_profit.periods);
-
-
-    },
-
-    series() {
-
-      return [
-        {
-          name: "Net Profit",
-          color: "#6BFFC7",
-          data: this.net_profit_series
-
-        },
-        {
-          name: "Gross Profit",
-          color: "#FFB01A",
-          data: this.gross_profit_series
-
-        }
-
-      ];
-
-    },
+			return Object.keys(this.data.net_profit.periods);
 
 
-    net_profit_series() {
+		},
 
-      let series = [];
+		series() {
 
-      if (this.data.net_profit) {
-        const months = Object.keys(this.data.net_profit.periods);
+			return [
+				{
+					name: "Net Profit",
+					color: "#6BFFC7",
+					data: this.net_profit_series
 
-        months.forEach(month => {
-          series.push(this.data.net_profit.periods[month]);
+				},
+				{
+					name: "Gross Profit",
+					color: "#FFB01A",
+					data: this.gross_profit_series
 
-        })
+				}
 
-      }
+			];
 
-
-      return series;
-
-    },
-
-    gross_profit_series() {
-
-      let series = [];
-
-      if (this.data.gross_profit) {
-        const months = Object.keys(this.data.gross_profit.periods);
-
-        months.forEach(month => {
-          series.push(this.data.gross_profit.periods[month]);
-
-        })
-
-      }
+		},
 
 
-      return series;
+		net_profit_series() {
 
-    }
+			let series = [];
+
+			if (this.data.net_profit) {
+				const months = Object.keys(this.data.net_profit.periods);
+
+				months.forEach(month => {
+					series.push(this.data.net_profit.periods[month]);
+
+				})
+
+			}
 
 
-  }
+			return series;
+
+		},
+
+		gross_profit_series() {
+
+			let series = [];
+
+			if (this.data.gross_profit) {
+				const months = Object.keys(this.data.gross_profit.periods);
+
+				months.forEach(month => {
+					series.push(this.data.gross_profit.periods[month]);
+
+				})
+
+			}
+
+
+			return series;
+
+		}
+
+
+	}
 })
 </script>
 
