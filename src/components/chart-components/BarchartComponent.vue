@@ -1,5 +1,5 @@
 <template>
-  <v-card flat :color="color" class="pa-2">
+  <v-card flat :color="color" class="pa-2 full-height">
     <apexchart :options="chartOptions" :series="series"></apexchart>
   </v-card>
 
