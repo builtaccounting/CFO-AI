@@ -213,7 +213,7 @@
 			<v-snackbar :color="snackbarType" v-model="showSnackbar"
       >{{ snackbarMsg }}
 			</v-snackbar>
-			<v-snackbar v-model="$store.state.showGeneralMessage" :timeout="5000" color="green">{{$store.state.generalMessage}}</v-snackbar>
+        <general-error-component></general-error-component>
       </span>
 
 
@@ -241,10 +241,11 @@
 
 
 import eventBus from "@/utils";
+import GeneralErrorComponent from "@/components/GeneralErrorComponent.vue";
 
 export default {
   name: "App",
-  components: {},
+  components: {GeneralErrorComponent},
   data() {
     return {
       showLogoutDialog: false,
@@ -396,7 +397,6 @@ export default {
 
               this.$router.push({path: URL});
 
-              console.log(res.data.data);
 
             })
 
