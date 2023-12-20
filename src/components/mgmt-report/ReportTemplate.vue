@@ -120,6 +120,31 @@
                   :color="report.color"
               ></grouped-bars-component>
             </v-col>
+
+                <v-col
+                cols="12"
+                v-else-if="['revenue','cost_of_sale','receivables','payables','cash_bank'].includes(page.slug)"
+            >
+
+                  <v-btn style="transition: 0.3s ease-in-out" block text color="blue" @click="showTrends=!showTrends">{{showTrends ? 'Hide' : 'Show'}} trends
+                    <v-icon style="transition: 0.3s ease-in-out" v-if="!showTrends">mdi-chevron-down</v-icon>
+                    <v-icon style="transition: 0.3s ease-in-out" v-else>mdi-chevron-up</v-icon>
+                  </v-btn>
+                  <span v-if="showTrends" style="transition: 0.3s ease-in-out">
+
+              <grouped-bars-component
+                  v-if="report"
+                  :data="page.data"
+                  :title="page.title"
+                  :color="report.color"
+              ></grouped-bars-component>
+                  </span>
+
+            </v-col>
+
+
+
+
           </v-row>
         </div>
 
@@ -291,6 +316,7 @@ export default {
   name: "ReportTemplate",
   data() {
     return {
+      showTrends:false,
       report: null,
       loading: false,
       presentMode: true,

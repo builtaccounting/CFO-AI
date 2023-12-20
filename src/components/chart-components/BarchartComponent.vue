@@ -11,96 +11,135 @@
 import {defineComponent} from 'vue'
 
 export default defineComponent({
-	props: {
-		data: {
-			type: Object
-		},
-		title: {
-			type: String,
-			default: ""
-		},
-		color: {
-			type: String,
-			default: ""
-		}
-	},
-	name: "BarchartComponent",
-	data() {
-		return {
-			chartOptions: {
-				chart: {
-					type: 'bar',
-					height: 300,
-					toolbar: {
-						show: false,
-					},
-				},
-				xaxis: {
-					type: 'category',
-					labels: {
-						formatter: function (val) {
-							return val
-						}
-					}
-				},
-				tooltip: {
-					x: {
-						formatter: function (val) {
-							return val
-						}
-					}
-				},
-				dataLabels: {
-					enabled: false
-				},
-				legend: {
-					show: false
-				},
-				plotOptions: {
-					bar: {
-						columnWidth: '70%',
-						borderRadius: "5",
-						isFunnel3d: true
-					}
-				}
-			},
+  props: {
+    data: {
+      type: Object
+    },
+    title: {
+      type: String,
+      default: ""
+    },
+    color: {
+      type: String,
+      default: ""
+    }
+  },
+  name: "BarchartComponent",
+  data() {
+    return {
+      months: [
+        "January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ],
+      chartOptions: {
+        chart: {
+          type: 'bar',
+          height: 300,
+          toolbar: {
+            show: false,
+          },
+        },
+        xaxis: {
+          type: 'category',
+          labels: {
+            formatter: function (val) {
+              return val
+            }
+          }
+        },
+        tooltip: {
+          x: {
+            formatter: function (val) {
+              return val
+            }
+          }
+        },
+        dataLabels: {
+          enabled: false
+        },
+        legend: {
+          show: false
+        },
+        plotOptions: {
+          bar: {
+            columnWidth: '70%',
+            borderRadius: "5",
+            isFunnel3d: true
+          }
+        }
+      },
 
 
-		}
-	},
+    }
+  },
 
-	computed: {
+  methods: {
+    monthTest(items) {
 
-		series() {
-			return [{
-				name: this.title.replaceAll("_", " "),
-				data: this.chartData
-			}]
+      let sumkeys = 0;
 
-		},
+      this.months.forEach(month => {
 
-		chartData() {
+        const test = items[month];
 
-			let list = [];
-			if (this.data && this.data.periods) {
+        console.log(test)
 
-				const months = Object.keys(this.data.periods);
+        if (test) {
+          sumkeys += Object.keys(test).length;
+        }
 
-				months.forEach(month => {
-					list.push({
-						x: month,
-						y: this.data.periods[month]
-					});
+      });
 
-				})
+      return sumkeys > 0;
 
-			}
+    }
+  },
+  computed: {
 
-			return list;
+    series() {
+      return [{
+        name: this.title.replaceAll("_", " "),
+        data: this.chartData
+      }]
 
-		}
+    },
 
-	}
+    chartData() {
+
+      let list = [];
+      if (this.data && this.data.periods) {
+
+
+        const monthTest = this.monthTest(this.data.periods);
+
+
+        const mainKeys = monthTest ? this.months : Object.keys(this.data.periods);
+
+        mainKeys.forEach(month => {
+          list.push({
+            x: month,
+            y: this.data.periods[month]
+          });
+
+        })
+
+      }
+
+      return list;
+
+    }
+
+  }
 
 })
 </script>

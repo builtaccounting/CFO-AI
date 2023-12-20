@@ -24,17 +24,58 @@ export default defineComponent({
   data() {
     return {
 
-      months: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+      months: ["January",
+        "February",
+        "March",
+        "April",
+        "May",
+        "June",
+        "July",
+        "August",
+        "September",
+        "October",
+        "November",
+        "December"
+      ]
     }
   },
 
-  computed: {
+  methods: {
+    monthTest(items) {
+      let sumkeys = 0;
 
+      this.months.forEach(month => {
+
+        const test = items[month];
+
+        if (test) {
+          sumkeys += Object.keys(test).length;
+        }
+
+      });
+
+
+      return sumkeys>0;
+    }
+  },
+  computed: {
     chartOptions() {
+
+      if (!this.data.periods_and_accounts) {
+
+        return {};
+
+      }
 
       let groupList = [];
       const dataAndAccounts = this.data.periods_and_accounts;
-      this.months.forEach(month => {
+
+      const monthTest = this.monthTest(dataAndAccounts);
+      console.log(monthTest)
+
+      const mainKeys = monthTest ? this.months : Object.keys(dataAndAccounts);
+
+      mainKeys.forEach(month => {
 
 
         const dataKeys = dataAndAccounts[month] ? Object.keys(dataAndAccounts[month]) : null;
@@ -42,9 +83,8 @@ export default defineComponent({
         if (dataKeys) {
           let cols = dataKeys.length;
 
-
           groupList.push({
-            title: month.substring(0,3),
+            title: monthTest ? month.substring(0, 3) : month,
             cols: cols
           });
 
@@ -72,23 +112,23 @@ export default defineComponent({
           type: 'category',
           labels: {
             style: {
-              fontSize: "9px"
+              fontSize: "12px"
             },
             enabled: false,
             formatter: function (val) {
-              return val.substring(0, 25)+"...";
+              return val.substring(0, 20) + "...";
             }
           },
           group: {
             style: {
-              fontSize: '20px',
+              fontSize: '16px',
               fontWeight: 800,
             },
             groups: groupList
           }
         },
         title: {
-          text: 'Expense trends',
+          text: this.title+' trends',
         },
         tooltip: {
           x: {
@@ -109,7 +149,12 @@ export default defineComponent({
 
       const dataAndAccounts = this.data.periods_and_accounts;
 
-      this.months.forEach(month => {
+      const monthTest = this.monthTest(dataAndAccounts);
+
+
+      const mainKeys = monthTest ? this.months : Object.keys(dataAndAccounts);
+
+      mainKeys.forEach(month => {
 
         if (dataAndAccounts[month]) {
 
@@ -121,12 +166,10 @@ export default defineComponent({
             itemKeys.forEach(itemKey => {
 
 
-                list.push({
-                  x: itemKey,
-                  y: item[itemKey]
-                });
-
-
+              list.push({
+                x: itemKey,
+                y: item[itemKey]
+              });
 
 
             })
