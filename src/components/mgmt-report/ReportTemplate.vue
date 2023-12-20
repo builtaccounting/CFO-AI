@@ -111,7 +111,7 @@
 
             <v-col
                 cols="12"
-                   v-if="['general_administrative_expenses'].includes(page.slug)"
+                v-if="['general_administrative_expenses'].includes(page.slug)"
             >
               <grouped-bars-component
                   v-if="report"
@@ -185,15 +185,14 @@
     </div>
 
     <v-navigation-drawer
-        absolute
+        app
         right
-        v-if="!$store.state.sidebarOpen"
-        color="grey lighten-4"
+        floating
     >
       <template v-slot:prepend>
-        <v-list-item two-line :style="{'color': 'white', 'background-color': report.color}" class="fw-bold">
+        <v-list-item dark  two-line class="font-weight-bold blue darken-3">
           <v-list-item-content>
-            <v-list-item-title>Edit Report</v-list-item-title>
+            <v-list-item-title>Report Settings</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
       </template>
@@ -209,14 +208,16 @@
               <v-col
                   cols="12"
               >
+
                 <v-text-field
                     :persistent-hint="true"
                     hint="Update your file name"
                     v-if="report"
                     v-model="filename"
                     :counter="99"
-                    label="File name"
+
                     required
+                    outlined
                     style="font-size: 0.8rem"
                     class="mb-5"
                 ></v-text-field>
@@ -236,6 +237,8 @@
                   class="white--text text-capitalize my-5 mx-auto fw-bold"
                   rounded
                   depressed
+                  x-large
+                  :loading="saving"
                   @click="updateSettings">Save Changes</v-btn>
 
 
@@ -291,6 +294,7 @@ export default {
       report: null,
       loading: false,
       presentMode: true,
+      saving:false,
       extensions: [
         new Doc(),
         new Text(),
@@ -338,14 +342,11 @@ export default {
             this.report = res.data;
             document.title = 'CFO AI - ' + this.report.name.split(':')[0];
             this.loading = false;
-            this.$store.state.sidebarOpen = false;
+            // this.$store.state.sidebarOpen = false;
 
           })
 
 
-    },
-
-    onBlur() {
     },
     editPageContent() {
       this.presentMode = false;
@@ -356,63 +357,25 @@ export default {
     onEditorUpdate() {
       console.log(this.report.pages);
     },
-    openFileSettings() {
-      this.settingsDialog = true;
-    },
     updateSettings() {
+
+      this.saving=true;
+
       axios.patch(`/api/management-reports/${this.report.uuid}`, {
         name: this.filename ? this.filename : this.report.name.split(':')[0],
         color: this.report.color
       })
-      eventBus.$emit('update-report-settings', this.report);
-      this.currentColor = this.report.color
-      this.settingsDialog = false;
-      this.showSnackbar = true
-      this.snackbarText = 'Report updated'
-    },
-    setReportColor(color) {
-      this.report.color = color
-      this.currentColor = this.reportColorHex(this.report.color);
-      axios.patch(`/api/management-reports/${this.report.uuid}`, {color: color})
-    },
-    backgroundImage(image) {
-      switch (image) {
-        case "green":
-          return "/img/reportBgGreen.png";
-        case "red":
-          return "/img/reportBgRed.png";
-        case "yellow":
-          return "/img/reportBgYellow.png";
-        case "blue":
-          return "/img/reportBgDefault.svg";
-        default:
-          return "/img/reportBgDefault.svg";
-      }
+          .then(res=> {
+            eventBus.$emit('update-report-settings', this.report);
+            this.currentColor = this.report.color
+            this.settingsDialog = false;
+            this.showSnackbar = true
+            this.snackbarText = 'Report updated'
+            this.saving=false;
 
-    },
-    reportColorHex(color) {
-      switch (color) {
-        case  'green':
-          this.currentColor = '#0097B2'
-          return '#0097B2'
-        case  'yellow':
-          this.currentColor = '#FFDE59'
-          return '#FFDE59'
-        case 'red':
-          this.currentColor = '#9E283C'
-          return '#9E283C'
-        case 'blue':
-          this.currentColor = '#0D47A1'
-          return '#0D47A1'
-        default:
-          this.currentColor = '#0D47A1'
-          return '#0D47A1'
-      }
-    },
-    changeColor() {
-      console.log(this.currentColor)
-
+          })
     }
+
   },
   mounted() {
     this.$store.state.sidebarOpen = false
@@ -430,17 +393,6 @@ export default {
     },
 
 
-    bgColors() {
-      return [
-        'blue',
-        // "blue2",
-        "green",
-        "yellow",
-        "red",
-      ];
-    },
-
-
     reportName() {
       return this.report.name
     }
@@ -453,7 +405,6 @@ export default {
 
     report(newReport) {
       this.filename = newReport.name.split(':')[0]
-      // console.log(newReport);
     },
 
   },

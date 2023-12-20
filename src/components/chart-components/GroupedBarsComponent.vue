@@ -60,7 +60,7 @@ export default defineComponent({
         },
         plotOptions: {
           bar: {
-            columnWidth: '40%',
+            columnWidth: '30%',
             borderRadius: "5",
           }
         },
