@@ -167,7 +167,7 @@
                 ></v-autocomplete>
 
 
-              <label >Select a theme color</label>
+              <label>Select a theme color</label>
               	<v-color-picker
                     class="w-100 mt-3"
                     v-model="templateColor"
@@ -223,12 +223,13 @@
       >
         <v-card>
           <v-card-title>Confirm logout</v-card-title>
-	        <v-divider class="mb-5"></v-divider>
+          <v-divider class="mb-5"></v-divider>
           <v-card-text>
             <h3 class="red--text">Do you want to logout?</h3>
           </v-card-text>
           <v-card-actions>
-            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed class="text-capitalize">Yes, Logout
+            <v-btn @click="logOut" :loading="loggingOut" block color="red" dark x-large rounded depressed
+                   class="text-capitalize">Yes, Logout
             </v-btn>
           </v-card-actions>
         </v-card>
@@ -320,9 +321,9 @@ export default {
     eventBus() {
       return eventBus;
     },
-	  docColor() {
-			return this.doc.color
-	  }
+    docColor() {
+      return this.doc.color
+    }
   },
   watch: {
     fileToUpload() {
@@ -393,48 +394,34 @@ export default {
               this.creating = false;
               this.reporting = false;
 
+              this.getReports();
+
               const URL = "/reports/" + res.data.data.uuid;
 
               this.$router.push({path: URL});
 
 
             })
+            .catch(() => {
+              this.loading = false;
+              this.reporting = false;
+              this.getReports();
+
+
+            })
 
       }
 
-    },
-
-    backgroundImage(color) {
-      switch (color) {
-        case "green":
-          return require("../public/img/reportBgGreen.png");
-        case "red":
-          return require("../public/img/reportBgRed.png");
-        case "yellow":
-          return require("../public/img/reportBgYellow.png");
-        case "blue":
-          return require("../public/img/reportBgDefault.png");
-      }
-
-    },
-    setReportColor(color) {
-      this.templateColor = color
     }
   },
   mounted() {
 
     this.getReports();
 
-    this.bgColors = [
-      'blue',
-      "green",
-      "yellow",
-      "red",
-    ];
-	  eventBus.$on('update-report-settings', (report) => {
-			this.templateColor = report.color;
-		  this.getReports();
-	  });
+    eventBus.$on('update-report-settings', (report) => {
+      this.templateColor = report.color;
+      this.getReports();
+    });
 
   },
 };
@@ -475,11 +462,11 @@ export default {
 }
 
 svg text {
-	fill: white !important;
+  fill: white !important;
 }
 
 .apexcharts-legend-text {
-	color: white !important;
-	fill: white !important;
+  color: white !important;
+  fill: white !important;
 }
 </style>

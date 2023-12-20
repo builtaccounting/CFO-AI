@@ -28,13 +28,6 @@ export default defineComponent({
     }
   },
 
-
-  methods: {
-    hasItems(keys) {
-      return keys.find(key => key == '\'\x00*\x00items');
-    }
-
-  },
   computed: {
 
     chartOptions() {
@@ -49,28 +42,15 @@ export default defineComponent({
         if (dataKeys) {
           let cols = dataKeys.length;
 
-          console.log(dataKeys);
-
-
-          if (this.hasItems(dataKeys)) {
-            const innerkeys = Object.keys(dataAndAccounts[month]['*items']);
-
-            cols += (innerkeys.length - 1)
-
-
-          }
 
           groupList.push({
-            title: month,
+            title: month.substring(0,3),
             cols: cols
           });
 
         }
 
       })
-
-
-      console.log(groupList);
 
       return {
 
@@ -91,9 +71,12 @@ export default defineComponent({
           enabled: false,
           type: 'category',
           labels: {
+            style: {
+              fontSize: "9px"
+            },
             enabled: false,
             formatter: function (val) {
-              return val;
+              return val.substring(0, 25)+"...";
             }
           },
           group: {
@@ -137,34 +120,13 @@ export default defineComponent({
           if (itemKeys) {
             itemKeys.forEach(itemKey => {
 
-              const itemvalue = item[itemKey];
-
-              if (typeof itemvalue === 'number') {
 
                 list.push({
-                  x: itemKey.substring(0, 18)+"...",
+                  x: itemKey,
                   y: item[itemKey]
                 });
 
-              } else if (itemvalue.length > 0) {
 
-                const valueKeys = Object.keys(itemvalue);
-
-                if (valueKeys) {
-                  valueKeys.forEach(key => {
-                    list.push({
-                      x: "item",
-                      y: itemvalue[itemKey]
-                    });
-
-
-                  })
-
-
-                }
-
-
-              }
 
 
             })
