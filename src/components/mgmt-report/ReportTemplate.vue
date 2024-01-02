@@ -56,7 +56,7 @@
                 :cols="['ratios_recommendations_recommendations'].includes(page.slug) ? 12 :6"
             >
 
-             <span v-if="presentMode">
+             <div v-if="presentMode">
               <p v-if="page.summary === ''" @dblclick="editPageContent">
                 This section does not have any content yet. Double-click to add
                 some.
@@ -64,11 +64,11 @@
               <p
                   class="mt-4 text-h6 text-justify"
                   v-else
-                  v-html="formattedResponse(page.summary)"
+                  v-html="page.summary"
                   @dblclick="editPageContent"
               ></p>
 
-             </span>
+             </div>
 
               <span v-else>
 
