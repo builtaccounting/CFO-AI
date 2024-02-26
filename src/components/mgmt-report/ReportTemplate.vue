@@ -74,7 +74,7 @@
 							<!--PRESENT CONTENT-->
              <div v-if="presentMode">
 							<!--							EMPTY PAGE CONTENT-->
-              <p v-if="page.summary === ''" @dblclick="editPageContent">
+              <p v-if="page.summary === '' || page.summary === `<p></p>`" @dblclick="editPageContent(page)">
                 This section does not have any content yet. Double-click to add
                 some.
               </p>
@@ -202,6 +202,8 @@
 	          depressed
 	          rounded
 	          color="blue darken-4"
+	          :href="$store.state.baseURL + '/management-reports/' + report.uuid + '/download'"
+	          download
           >
             <v-icon small>mdi-download</v-icon>
             Download
@@ -235,6 +237,7 @@
 	    app
 	    right
 	    floating
+	    class="px-1"
     >
       <template v-slot:prepend>
         <v-list-item dark two-line class="font-weight-bold blue darken-3">
@@ -258,10 +261,9 @@
 
                 <v-text-field
 	                :persistent-hint="true"
-	                hint="Update your file name"
+	                label="Update your file name"
 	                v-model="filename"
 	                :counter="99"
-
 	                required
 	                outlined
 	                style="font-size: 0.8rem"
@@ -322,7 +324,7 @@
 		  <v-card>
 			  <v-card-title>Are you sure?</v-card-title>
 			  <v-card-text>
-				  <p>Do you want to delete {{this.report.namee}}? This action cannot be reversed.</p>
+				  <p>Do you want to delete <strong>{{report.name}}</strong>? This action cannot be reversed.</p>
 			  </v-card-text>
 			  <v-card-actions>
 				  <v-spacer></v-spacer>
@@ -519,7 +521,7 @@ export default {
 	      eventBus.$emit('delete-report',);
 				this.loading = false
       })
-		}
+		},
 	},
 	mounted() {
 		this.$store.state.sidebarOpen = false

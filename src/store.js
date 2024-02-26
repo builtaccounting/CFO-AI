@@ -13,7 +13,8 @@ export default new Vuex.Store({
         currentReport: null,
         sidebarOpen: true,
         showGeneralMessage: false,
-        generalMessage: ''
+        generalMessage: '',
+        baseURL: "https://web.builtaccounting.com",
     },
     getters: {
         getExistingFile: (state) => (name) => {
