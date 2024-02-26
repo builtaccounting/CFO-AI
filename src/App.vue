@@ -166,6 +166,17 @@
                     outlined
                 ></v-autocomplete>
 
+              	<v-autocomplete
+		              label="Select a business"
+                    :clearable="true"
+                    v-model="selectedBusiness"
+                    :items="businesses"
+                    item-text="name"
+                    item-value="id"
+                    :rules="[(v) => !!v || 'Business is required']"
+                    outlined
+                ></v-autocomplete>
+
 
               <label>Select a theme color</label>
               	<v-color-picker
@@ -198,8 +209,10 @@
                     dark
                     rounded
                     :loading="loading"
+                    depressed
                     x-large
                     color="blue darken-4"
+                    :disabled="!fileName ||!reportPeriod ||!selectedBusiness ||!templateColor"
                     v-if="!creating"
                 >
 									Generate Report
@@ -313,17 +326,17 @@ export default {
       snackbarMsg: "",
       templateColor: "#0D47A1",
       bgColors: [],
+	    businesses: [],
+	    invitedBusinesses: [],
+	    selectedBusiness: null,
 
     };
   },
 
   computed: {
-    eventBus() {
-      return eventBus;
-    },
-    docColor() {
-      return this.doc.color
-    }
+		  baseUrl() {
+			  return this.$store.state.baseURL;
+		  },
   },
   watch: {
     fileToUpload() {
@@ -385,6 +398,7 @@ export default {
           name: this.fileName.trim(),
           period: this.reportPeriod,
           color: this.templateColor,
+	        business_id: this.selectedBusiness
         };
 
         this.creating = true;
@@ -415,7 +429,10 @@ export default {
     }
   },
   mounted() {
-
+	  axios('/api/getbusinesses').then((res) => {
+			console.log(res.data)
+			this.businesses = res.data;
+	  })
     this.getReports();
 
     eventBus.$on('update-report-settings', (report) => {
