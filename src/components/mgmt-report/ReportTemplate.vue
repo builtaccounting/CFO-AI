@@ -4,7 +4,8 @@
 
     <document-loading-component v-if="loading"></document-loading-component>
 
-	  <div v-else-if="regenerating" class="text-center my-auto" style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center">
+	  <div v-else-if="regenerating" class="text-center my-auto"
+	       style="min-height: 100vh; display: flex; flex-direction: column; justify-content: center">
 				<v-progress-circular
 					size="250"
 					indeterminate
@@ -70,8 +71,9 @@
             <v-col
 	            :cols="['ratios_recommendations_recommendations'].includes(page.slug) ? 12 :6"
             >
-<!--							PRESENT CONTENT-->
+							<!--PRESENT CONTENT-->
              <div v-if="presentMode">
+							<!--							EMPTY PAGE CONTENT-->
               <p v-if="page.summary === ''" @dblclick="editPageContent">
                 This section does not have any content yet. Double-click to add
                 some.
@@ -80,34 +82,30 @@
 	              class="mt-4 text-h6 text-justify"
 	              v-else
 	              v-html="page.summary"
-	              @dblclick="editPageContent"
+	              @dblclick="editPageContent(page)"
               ></p>
 
              </div>
-	            <!--							EDIT CONTENT-->
+	            <!--	EDIT CONTENT-->
               <span v-else>
-
-	              <v-btn color="orange" depressed rounded
-	                     v-if="(pageToUpdate && pageToUpdate.uuid === page.uuid) || (pagesToUpdate.length > 0 && pagesToUpdate.find((one) => one.uuid === page.uuid))">
+	              <v-btn color="orange" depressed rounded @click="pagesToUpdate.length > 1 ? saveAllPages() : savePage(page)"
+	                     v-if="pagesToUpdate.find((one) => one.uuid === page.uuid)">
 		              Save {{ pagesToUpdate.length > 1 ? 'all' : 'change' }}
 	              </v-btn>
 
 
               <el-tiptap
-	              @onUpdate="updating(page); pagesToUpdate.push(page)"
-	              @onBlur="onEditorUpdate(page)"
-	              @onFocus="onFocus(page)"
+	              @onUpdate="updating(page);"
 	              class="mt-4"
 	              :spellcheck="true"
 	              :placeholder="`Section content for ${page.title}`"
 	              v-model="page.summary"
-	              :content="page.summary"
 	              :extensions="extensions"
               />
               </span>
 
             </v-col>
-	          <!--					CHART-->
+	          <!--					CHARTS-->
             <v-col cols="6">
 
                <pie-chart-component
@@ -279,24 +277,32 @@
 								></v-color-picker>
               </v-col>
               <v-btn
+	              block
 	              :color="report.color"
 	              class="white--text text-capitalize my-5 mx-auto fw-bold"
 	              rounded
 	              depressed
-	              x-large
 	              :loading="saving"
 	              :disabled="regenerating"
 	              @click="updateSettings">Save Changes</v-btn>
 
 	            <v-btn
+		            block
 		            :color="report.color"
-		            class="white--text text-capitalize mt-1 mx-auto fw-bold"
+		            class="white--text text-capitalize mt-1 mb-5 mx-auto fw-bold"
 		            rounded
 		            depressed
-		            x-large
 		            :loading="regenerating"
 		            :disabled="saving"
 		            @click="reloadReport">Regenerate report</v-btn>
+
+	            <v-btn
+		            block
+		            color="red darken-4"
+		            class="white--text text-capitalize mt-1 mx-auto fw-bold"
+		            rounded
+		            depressed
+		            @click="openDeleteDialog = true">Delete report</v-btn>
 
 
             </v-row>
@@ -312,6 +318,19 @@
 	  <v-snackbar v-model="showSnackbar" :timeout="5000" color="green">{{ snackbarText }}</v-snackbar>
 
   </span>
+	  <v-dialog v-model="openDeleteDialog" width="500" scrollable>
+		  <v-card>
+			  <v-card-title>Are you sure?</v-card-title>
+			  <v-card-text>
+				  <p>Do you want to delete {{this.report.namee}}? This action cannot be reversed.</p>
+			  </v-card-text>
+			  <v-card-actions>
+				  <v-spacer></v-spacer>
+          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="blue darken-1" text @click="openDeleteDialog = false">Cancel</v-btn>
+          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="deleteReport">Delete</v-btn>
+			  </v-card-actions>
+		  </v-card>
+	  </v-dialog>
 
 
   </span>
@@ -333,7 +352,12 @@ import {
 	Paragraph,
 	Text,
 	TextColor,
-	Underline
+	Underline,
+	FontType,
+	FontSize,
+	Blockquote,
+	Preview,
+	TextAlign
 } from "element-tiptap";
 import DocumentLoadingComponent from "@/components/DocumentLoadingComponent.vue";
 import BarchartComponent from "@/components/chart-components/BarchartComponent.vue";
@@ -358,14 +382,18 @@ export default {
 				new Paragraph(),
 				new Heading({level: 5}),
 				new Bold({bubble: true}), // render command-button in bubble menu.
-				new Underline({bubble: true, menubar: false}), // render command-button in bubble menu but not in menubar.
-				new Italic(),
+				new Underline({bubble: true}), // render command-button in bubble menu but not in menubar.
+				new Italic({bubble: true}),
 				new ListItem(),
 				new BulletList(),
 				new OrderedList(),
-				new TextColor(),
+				new TextColor({bubble: true}),
 				new FormatClear(),
-				new History()
+				new History(),
+        new FontSize(),
+        new Blockquote(),
+        new Preview(),
+        new TextAlign({bubble: true}),
 			],
 			content: "",
 			doc: null,
@@ -378,7 +406,9 @@ export default {
 			pageToUpdate: null,
 			unsavedPages: [],
 			pagesToUpdate: [],
-			regenerating: false
+			regenerating: false,
+			editorContent: '',
+			openDeleteDialog: false
 		};
 	},
 	components: {
@@ -410,19 +440,12 @@ export default {
 
 
 		},
-		editPageContent() {
+		editPageContent(page) {
 			this.presentMode = false;
+			this.pageToUpdate = page
+			// this.editorContent = page.summary
 		},
 		onEditorUpdate(update) {
-			// let pageUnsaved = this.unsavedPages.find((page) => page.uuid === update.uuid);
-			// if (pageUnsaved) {
-			// 	this.unsavedPages.push(update)
-			// }
-			// console.log(update);
-		},
-		onFocus(page) {
-			console.log("Here");
-			console.log(page);
 		},
 		updateSettings() {
 
@@ -438,13 +461,44 @@ export default {
 					this.settingsDialog = false;
 					this.showSnackbar = true
 					this.snackbarText = 'Report updated'
+					this.getReport()
 					this.saving = false;
 
 				})
 		},
 
 		updating(page) {
-			this.pageToUpdate = page;
+			let pageExists = this.pagesToUpdate.find(p => p.uuid === page.uuid);
+			if (!pageExists) {
+				this.pageToUpdate = page;
+				// this.pagesToUpdate.push({page, 'newContent': this.editorContent})
+				this.pagesToUpdate.push(page)
+			} else {
+				pageExists.summary = page.summary;
+			}
+			console.log(this.pagesToUpdate)
+		},
+		savePage(page) {
+			console.log(page)
+			this.loading = true;
+			axios.patch(`/api/management-reports/${this.report.uuid}/pages/${page.uuid}`, {
+				"content": page.summary
+			}).then((res) => {
+				this.loading = false
+				console.log(res.data)
+			}).catch((err) => {
+				this.loading = false
+				console.log(`${page.name} failed to update!`)
+        console.log(err)
+			})
+
+		},
+		saveAllPages() {
+			this.pagesToUpdate.forEach(page => {
+				this.savePage(page)
+			})
+			this.pagesToUpdate = []
+			this.presentMode = true;
 		},
 		reloadReport() {
 			this.regenerating = true;
@@ -456,6 +510,16 @@ export default {
 					this.regenerating = false;
 
 				})
+		},
+		deleteReport() {
+			this.loading = true;
+      axios.delete('/api/management-reports/' + this.report.uuid).then(() => {
+				this.openDeleteDialog = false;
+				this.$router.push('/');
+	      this.$store.state.sidebarOpen = true
+	      eventBus.$emit('delete-report',);
+				this.loading = false
+      })
 		}
 	},
 	mounted() {
