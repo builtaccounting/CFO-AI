@@ -476,16 +476,16 @@ export default {
 			} else {
 				pageExists.summary = page.summary;
 			}
-			console.log(this.pagesToUpdate)
 		},
 		savePage(page) {
-			console.log(page)
 			this.loading = true;
 			axios.patch(`/api/management-reports/${this.report.uuid}/pages/${page.uuid}`, {
 				"content": page.summary
 			}).then((res) => {
+				this.pagesToUpdate = []
+				this.pageToUpdate = null
+				this.presentMode = true
 				this.loading = false
-				console.log(res.data)
 			}).catch((err) => {
 				this.loading = false
 				console.log(`${page.name} failed to update!`)
@@ -504,7 +504,6 @@ export default {
 			this.regenerating = true;
 			axios.post("/api/management-reports/" + this.report.uuid + '/reload')
 				.then(res => {
-					console.log(res.data.data);
 					this.report = res.data.data;
 					document.title = 'CFO AI -' + this.report.name.split(':')[0];
 					this.regenerating = false;
