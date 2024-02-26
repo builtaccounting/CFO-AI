@@ -79,8 +79,9 @@
                 some.
               </p>
               <p
-	              class="mt-4 text-h6 text-justify"
+	              class="mt-4 text-justify"
 	              v-else
+	              style="font-size: 1.2rem"
 	              v-html="page.summary"
 	              @dblclick="editPageContent(page)"
               ></p>
@@ -95,6 +96,7 @@
 
 
               <el-tiptap
+	              style="font-size: 1.2rem !important;"
 	              @onUpdate="updating(page);"
 	              class="mt-4"
 	              :spellcheck="true"

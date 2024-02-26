@@ -36,7 +36,7 @@
 
       >
 				<v-btn
-            class="mt-4  "
+            class="mt-4 "
             x-large
             rounded
             color="blue lighten-5 blue--text"
