@@ -318,7 +318,7 @@
 		            outlined
 		            :loading="regenerating"
 		            :disabled="saving"
-		            @click="reloadReport">Regenerate report</v-btn>
+		            @click="openConfirmRegenerate = true">Regenerate report</v-btn>
 
 	            <v-btn
 		            block
@@ -344,7 +344,7 @@
 
   </span>
 
-	  <v-dialog v-model="openDeleteDialog" width="500" scrollable>
+	  <v-dialog v-model="openDeleteDialog" width="500" scrollable persistent>
 		  <v-card>
 			  <v-card-title>Are you sure?</v-card-title>
 			  <v-card-text>
@@ -360,19 +360,19 @@
 		  </v-card>
 	  </v-dialog>
 
-	  <!--	  <v-dialog v-model="openConfirmRegenerate" width="500" scrollable>-->
-	  <!--		  <v-card>-->
-	  <!--			  <v-card-title>Confirm</v-card-title>-->
-	  <!--			  <v-card-text>-->
-	  <!--				  <p>This will cost you <strong>{{report.name}}</strong>? This action cannot be reversed.</p>-->
-	  <!--			  </v-card-text>-->
-	  <!--			  <v-card-actions>-->
-	  <!--				  <v-spacer></v-spacer>-->
-	  <!--          <v-btn class="white&#45;&#45;text text-capitalize mt-1 mx-auto fw-bold" color="blue darken-1" text @click="openConfirmRegenerate = false">Cancel</v-btn>-->
-	  <!--          <v-btn class="white&#45;&#45;text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="deleteReport">Delete</v-btn>-->
-	  <!--			  </v-card-actions>-->
-	  <!--		  </v-card>-->
-	  <!--	  </v-dialog>-->
+	  	  <v-dialog v-model="openConfirmRegenerate" width="500" scrollable persistent>
+	  		  <v-card>
+	  			  <v-card-title>Confirm</v-card-title>
+	  			  <v-card-text>
+	  				  <p>This will cost you <strong>1 report credit</strong> and will overwrite the current report. This action cannot be reversed.</p>
+	  			  </v-card-text>
+	  			  <v-card-actions>
+	  				  <v-spacer></v-spacer>
+	            <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="openConfirmRegenerate = false">No. Take me back!</v-btn>
+	            <v-btn class="text-capitalize mt-1 mx-auto fw-bold" color="blue darken-4" text @click="reloadReport">Yes</v-btn>
+	  			  </v-card-actions>
+	  		  </v-card>
+	  	  </v-dialog>
 
 
   </span>
@@ -449,7 +449,8 @@ export default {
 			pagesToUpdate: [],
 			regenerating: false,
 			editorContent: '',
-			openDeleteDialog: false
+			openDeleteDialog: false,
+			openConfirmRegenerate: false
 		};
 	},
 	components: {
