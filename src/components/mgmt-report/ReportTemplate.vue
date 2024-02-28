@@ -21,7 +21,7 @@
         <h5 class="text-center">Regenerating report, please wait ...</h5>
 		</div>
 
-  <span v-else>
+    <span v-else>
     <div class="mx-auto grey lighten-4" v-if="report">
       <v-toolbar-title
 	      class="text-center fw-bold text-capitalize"
@@ -360,7 +360,7 @@
 		  </v-card>
 	  </v-dialog>
 
-	  	  <v-dialog v-model="openConfirmRegenerate" width="500" scrollable persistent>
+	  <v-dialog v-model="openConfirmRegenerate" width="500" scrollable persistent>
 	  		  <v-card>
 	  			  <v-card-title>Confirm</v-card-title>
 	  			  <v-card-text>
@@ -523,6 +523,10 @@ export default {
 			axios.patch(`/api/management-reports/${this.report.uuid}/pages/${page.uuid}`, {
 				"content": page.summary
 			}).then((res) => {
+				if(this.pagesToUpdate.length === 1){
+					this.snackbarText = `Page updated`
+					this.showSnackbar = true
+				}
 				this.pagesToUpdate = []
 				this.pageToUpdate = null
 			}).catch((err) => {
@@ -536,6 +540,8 @@ export default {
 			this.pagesToUpdate.forEach(page => {
 				this.savePage(page)
 			})
+			this.snackbarText = `Updated all pages`
+			this.showSnackbar = true
 			this.pagesToUpdate = []
 			this.presentMode = true;
 		},
