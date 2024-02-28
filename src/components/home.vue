@@ -56,7 +56,7 @@
 						<v-row class="py-5" v-if="storeReports.length > 0">
 							<v-card
 								width="200"
-								height="250"
+								max-height="300"
 								class="ma-3 py-4"
 								v-for="(i, idx) in storeReports"
 
@@ -80,14 +80,11 @@
 								</v-card-title>
 								<v-card-subtitle>
 									<p class="grey--text">{{ i.business_name }}</p>
-									<p>{{ i.period.replace('_', ' ') }}</p>
-									<p>{{ i.name.split(":")[1] }}</p>
-									<p class="grey--text fw-bold mb-5">{{ moment(i.created_at).format("ddd, Mo Do YYYY") }}</p>
+									<p class="text-capitalize">{{ i.period.replace('_', ' ') }}</p>
 								</v-card-subtitle>
-
-								<v-card-text class="">
-
-								</v-card-text>
+								<v-card-actions style="position: absolute; bottom: 1%" class="mx-2">
+									<p class="grey--text fw-bold mb-5">{{ moment(i.created_at).format("ddd, Mo Do YYYY") }}</p>
+								</v-card-actions>
 							</v-card>
 						</v-row>
 						<v-row v-else>
