@@ -184,12 +184,8 @@
 
 
               <label>Select a theme color</label>
-              	<v-color-picker
-		              class="w-100 mt-3"
-		              v-model="templateColor"
-		              :show-swatches="true"
-		              :hide-inputs="true"
-	              ></v-color-picker>
+              <v-icon :color="templateColor ? templateColor : '#0D47A1'"
+                      @click="openColorPicker = true">mdi-palette</v-icon>
 
               </v-form>
               <div v-else class="text-center">
@@ -211,6 +207,23 @@
               </div>
 
             </v-card-text>
+	            <v-sheet rounded="lg" class="mt-5 mx-5 pt-5" color="grey lighten-4">
+		            <v-row class="pa-5">
+		            <v-col cols="12">
+			            <h2 class="mx-1 font-weight-medium text-capitalize">coming soon...</h2>
+		            </v-col>
+		            <v-col cols="12" class="d-flex align-center">
+		              <img src="/img/qb_logo1.png" height="100" alt="qb"/>
+		              <img src="/img/Wave_logo_RGB-758x275-296650780.png" height="75" alt="wave"/>
+		              <img src="/img/zoho-books_q5s8.1920-3895511793.jpg" height="70" alt="zoho" class="white"/>
+		            </v-col>
+		            <v-col cols="12" class="d-flex align-center">
+		              <img src="/img/xero-logo-1122207467.png" height="100" alt="xero"/>
+		              <img src="/img/freshbooks_hn71.1200-3996272495.jpg" height="90" alt="fb" class="pa-2 ml-2"/>
+		              <img src="/img/Sage_Green_Logo-2228348961.jpg" height="80" alt="sage" class="white pa-2 ml-2"/>
+		            </v-col>
+	            </v-row>
+	            </v-sheet>
             <v-card-actions>
               	<v-btn
 		              @click="generateNewReport"
@@ -221,7 +234,7 @@
 		              :loading="loading"
 		              depressed
 		              x-large
-		              color="blue darken-4"
+		              :color="templateColor ? templateColor : '#0D47A1'"
 		              :disabled="!fileName ||!reportPeriod ||!selectedBusiness ||!templateColor"
 		              v-if="!creating"
 	              >
@@ -230,7 +243,29 @@
             </v-card-actions>
 					</v-card>
 				</v-dialog>
+				<!--				COLOR PICKER-->
+				 <v-dialog
+					 v-model="openColorPicker"
+					 width="300"
+					 scrollable
+					 persistent
+					 eager
+				 >
+					 <v-card flat>
+						 <v-card-title>Pick a color</v-card-title>
+						 <v-card-text>  	<v-color-picker
+							 class="w-100 mt-3"
+							 v-model="templateColor"
+							 :show-swatches="true"
+							 :hide-inputs="true"
+						 ></v-color-picker></v-card-text>
+						 <v-card-actions>
+               <v-btn rounded depressed :color="templateColor ? templateColor : '#0D47A1'" block
+                      class="white--text mb-5" @click="openColorPicker = false">Select</v-btn>
+             </v-card-actions>
+					 </v-card>
 
+				 </v-dialog>
 
 			</v-main>
 			<v-snackbar :color="snackbarType" v-model="showSnackbar"
@@ -340,6 +375,7 @@ export default {
 			invitedBusinesses: [],
 			selectedBusiness: null,
 
+			openColorPicker: false
 		};
 	},
 

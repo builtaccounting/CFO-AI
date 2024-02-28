@@ -98,7 +98,7 @@ export default {
 			<img
 			alt="company_logo"
 			src="${this.report.business_logo}"
-			class="rounded-pill pa-2 ml-10"
+			class="rounded-pill pa-2"
 			height="100"
 			/>
 			<h1

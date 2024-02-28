@@ -30,8 +30,8 @@
       </v-toolbar-title>
 	    <!--	  DOCUMENT DISPLAY-->
       <v-container
-	      class="relative overflow-y-auto  pa-2"
-	      style="height: 80vh"
+	      class="relative overflow-y-auto overflow-x-hidden pa-2"
+	      style="height: 80vh;"
 	      v-if="report"
 
       >
@@ -97,6 +97,8 @@
 								        Save {{ pagesToUpdate.length > 1 ? 'all' : 'change' }}
 								    </v-btn>
 									</transition>
+
+		              <v-spacer></v-spacer>
 
 		              <transition name="fade-in">
 		                <v-switch
@@ -239,12 +241,11 @@
           </v-btn>
           <v-spacer/>
 	        <div class="d-flex align-center">
-	        <v-btn text class="text-capitalize grey--text text--darken-2" v-if="presentMode">Edit</v-btn>
+	        <h5 class="text-capitalize grey--text text--darken-2 font-weight-medium mr-3">Edit</h5>
           <v-switch
-	          v-if="presentMode"
 	          color="blue darken-4"
 	          v-model="presentMode"
-	          :label="presentMode ? 'Preview' : 'Edit'"
+	          :label="presentMode ? 'Preview' : 'Preview'"
 	          inset
           ></v-switch>
 	        </div>

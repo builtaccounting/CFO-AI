@@ -83,7 +83,7 @@
 									<p class="text-capitalize">{{ i.period.replace('_', ' ') }}</p>
 								</v-card-subtitle>
 								<v-card-actions style="position: absolute; bottom: 1%" class="mx-2">
-									<p class="grey--text fw-bold mb-5">{{ moment(i.created_at).format("ddd, Mo Do YYYY") }}</p>
+									<p class="grey--text fw-bold mb-5">{{ moment(i.created_at).format("ddd, Do MMM YYYY") }}</p>
 								</v-card-actions>
 							</v-card>
 						</v-row>
@@ -104,7 +104,7 @@
 						<h1 class="text-h4 font-weight-light mb-0">
 							{{ 10 - storeReports.length }}
 						</h1>
-						<small>Current Reports balance</small>
+						<small>Current credit balance</small>
 						<v-btn
 							class="mt-5"
 							block
@@ -113,7 +113,7 @@
 							depressed
 							x-large
 							rounded
-						>Buy Report Credits
+						>Buy Credits
 						</v-btn
 						>
 					</v-card-text>
@@ -121,15 +121,15 @@
 				<h2 class="nanum my-auto text-center" style="font-size: 2rem">Reporting just got easier!</h2>
 				<template>
 					<v-timeline>
-						<v-timeline-item color="blue darken-4"><p class="fw-bold">Click on <br/><span
+						<v-timeline-item color="blue darken-4"><p class="">Click on <br/><span
 							class="blue darken-4 white--text pa-1 rounded-pill px-2">New Report</span></p></v-timeline-item>
-						<v-timeline-item class="fw-bold" color="blue darken-4">Select the time period and business you want a report
+						<v-timeline-item class="" color="blue darken-4">Select the time period and business you want a report
 							for.
 						</v-timeline-item>
-						<v-timeline-item class="text-right fw-bold" color="blue darken-4">
+						<v-timeline-item class="text-right " color="blue darken-4">
 							Let Built CFO AI generate a comprehensive management report for you.
 						</v-timeline-item>
-						<v-timeline-item class="fw-bold" color="blue darken-4">View, download, share and edit your report.
+						<v-timeline-item class="" color="blue darken-4">View, download, share and edit your report.
 						</v-timeline-item>
 					</v-timeline>
 				</template>
