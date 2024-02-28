@@ -89,10 +89,25 @@
              </div>
 	            <!--	EDIT CONTENT-->
               <span v-else>
-	              <v-btn color="orange" depressed rounded @click="pagesToUpdate.length > 1 ? saveAllPages() : savePage(page)"
-	                     v-if="pagesToUpdate.find((one) => one.uuid === page.uuid)">
-		              Save {{ pagesToUpdate.length > 1 ? 'all' : 'change' }}
-	              </v-btn>
+	              <div class="d-flex align-center">
+		              <transition name="fade-in">
+								    <v-btn :color="report.color" depressed rounded outlined
+								           @click="pagesToUpdate.length > 1 ? saveAllPages() : savePage(page)"
+								           v-if="pagesToUpdate.find((one) => one.uuid === page.uuid)">
+								        Save {{ pagesToUpdate.length > 1 ? 'all' : 'change' }}
+								    </v-btn>
+									</transition>
+
+		              <transition name="fade-in">
+		                <v-switch
+			                color="blue darken-4"
+			                v-model="presentMode"
+			                :label="presentMode ? 'Edit Mode' : 'Switch To Preview'"
+			                inset
+			                class="mx-2"
+		                ></v-switch>
+		              </transition>
+	              </div>
 
 
               <el-tiptap
@@ -223,12 +238,16 @@
             Share Feedback
           </v-btn>
           <v-spacer/>
+	        <div class="d-flex align-center">
+	        <v-btn text class="text-capitalize grey--text text--darken-2" v-if="presentMode">Edit</v-btn>
           <v-switch
+	          v-if="presentMode"
 	          color="blue darken-4"
 	          v-model="presentMode"
-	          :label="presentMode ? 'Presentation Mode' : 'Edit Mode'"
+	          :label="presentMode ? 'Preview' : 'Edit'"
 	          inset
           ></v-switch>
+	        </div>
           <v-spacer/>
         </v-list-item>
       </v-list>
@@ -287,15 +306,16 @@
 	              rounded
 	              depressed
 	              :loading="saving"
-	              :disabled="regenerating"
+	              :disabled="regenerating || !presentMode"
 	              @click="updateSettings">Save Changes</v-btn>
 
 	            <v-btn
 		            block
 		            :color="report.color"
-		            class="white--text text-capitalize mt-1 mb-5 mx-auto fw-bold"
+		            class="text-capitalize mt-1 mb-5 mx-auto fw-bold"
 		            rounded
 		            depressed
+		            outlined
 		            :loading="regenerating"
 		            :disabled="saving"
 		            @click="reloadReport">Regenerate report</v-btn>
@@ -306,6 +326,7 @@
 		            class="white--text text-capitalize mt-1 mx-auto fw-bold"
 		            rounded
 		            depressed
+		            outlined
 		            @click="openDeleteDialog = true">Delete report</v-btn>
 
 
@@ -322,19 +343,36 @@
 	  <v-snackbar v-model="showSnackbar" :timeout="5000" color="green">{{ snackbarText }}</v-snackbar>
 
   </span>
+
 	  <v-dialog v-model="openDeleteDialog" width="500" scrollable>
 		  <v-card>
 			  <v-card-title>Are you sure?</v-card-title>
 			  <v-card-text>
-				  <p>Do you want to delete <strong>{{report.name}}</strong>? This action cannot be reversed.</p>
+				  <p>Do you want to delete <strong>{{ report.name }}</strong>? This action cannot be reversed.</p>
 			  </v-card-text>
 			  <v-card-actions>
 				  <v-spacer></v-spacer>
-          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="blue darken-1" text @click="openDeleteDialog = false">Cancel</v-btn>
-          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="deleteReport">Delete</v-btn>
+          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="blue darken-1" text
+                 @click="openDeleteDialog = false">Cancel</v-btn>
+          <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text
+                 @click="deleteReport">Delete</v-btn>
 			  </v-card-actions>
 		  </v-card>
 	  </v-dialog>
+
+	  <!--	  <v-dialog v-model="openConfirmRegenerate" width="500" scrollable>-->
+	  <!--		  <v-card>-->
+	  <!--			  <v-card-title>Confirm</v-card-title>-->
+	  <!--			  <v-card-text>-->
+	  <!--				  <p>This will cost you <strong>{{report.name}}</strong>? This action cannot be reversed.</p>-->
+	  <!--			  </v-card-text>-->
+	  <!--			  <v-card-actions>-->
+	  <!--				  <v-spacer></v-spacer>-->
+	  <!--          <v-btn class="white&#45;&#45;text text-capitalize mt-1 mx-auto fw-bold" color="blue darken-1" text @click="openConfirmRegenerate = false">Cancel</v-btn>-->
+	  <!--          <v-btn class="white&#45;&#45;text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="deleteReport">Delete</v-btn>-->
+	  <!--			  </v-card-actions>-->
+	  <!--		  </v-card>-->
+	  <!--	  </v-dialog>-->
 
 
   </span>
@@ -343,10 +381,12 @@
 
 <script>
 import {
+	Blockquote,
 	Bold,
 	BulletList,
 	Doc,
 	ElementTiptap,
+	FontSize,
 	FormatClear,
 	Heading,
 	History,
@@ -354,14 +394,11 @@ import {
 	ListItem,
 	OrderedList,
 	Paragraph,
-	Text,
-	TextColor,
-	Underline,
-	FontType,
-	FontSize,
-	Blockquote,
 	Preview,
-	TextAlign
+	Text,
+	TextAlign,
+	TextColor,
+	Underline
 } from "element-tiptap";
 import DocumentLoadingComponent from "@/components/DocumentLoadingComponent.vue";
 import BarchartComponent from "@/components/chart-components/BarchartComponent.vue";
@@ -394,10 +431,10 @@ export default {
 				new TextColor({bubble: true}),
 				new FormatClear(),
 				new History(),
-        new FontSize(),
-        new Blockquote(),
-        new Preview(),
-        new TextAlign({bubble: true}),
+				new FontSize(),
+				new Blockquote(),
+				new Preview(),
+				new TextAlign({bubble: true}),
 			],
 			content: "",
 			doc: null,
@@ -482,18 +519,15 @@ export default {
 			}
 		},
 		savePage(page) {
-			this.loading = true;
 			axios.patch(`/api/management-reports/${this.report.uuid}/pages/${page.uuid}`, {
 				"content": page.summary
 			}).then((res) => {
 				this.pagesToUpdate = []
 				this.pageToUpdate = null
-				this.presentMode = true
-				this.loading = false
 			}).catch((err) => {
 				this.loading = false
 				console.log(`${page.name} failed to update!`)
-        console.log(err)
+				console.log(err)
 			})
 
 		},
@@ -516,13 +550,13 @@ export default {
 		},
 		deleteReport() {
 			this.loading = true;
-      axios.delete('/api/management-reports/' + this.report.uuid).then(() => {
+			axios.delete('/api/management-reports/' + this.report.uuid).then(() => {
 				this.openDeleteDialog = false;
 				this.$router.push('/');
-	      this.$store.state.sidebarOpen = true
-	      eventBus.$emit('delete-report',);
+				this.$store.state.sidebarOpen = true
+				eventBus.$emit('delete-report',);
 				this.loading = false
-      })
+			})
 		},
 	},
 	mounted() {
@@ -598,4 +632,13 @@ section::before {
 p {
 	cursor: pointer !important;
 }
+
+.fade-in-enter-active, .fade-in-leave-active {
+	transition: opacity 300ms ease-in-out;
+}
+
+.fade-in-enter, .fade-in-leave-to {
+	opacity: 0;
+}
+
 </style>
