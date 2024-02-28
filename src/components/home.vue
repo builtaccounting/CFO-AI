@@ -52,7 +52,7 @@
 			  <v-row dense>
 				  <v-col cols="12">
 					  <h3 class="font-weight-bold mt-5">Recently Added</h3>
-					  <v-row class="py-5" v-if="reports.length > 0">
+					  <v-row class="py-5" v-if="storeReports.length > 0">
 						  <v-card
 							  width="200"
 							  max-height="400"
