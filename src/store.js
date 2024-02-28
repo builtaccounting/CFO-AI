@@ -27,7 +27,7 @@ export default new Vuex.Store({
             return [...new Set(categories)].sort();
         },
         getRecentDocuments(state) {
-            return state.reports.reverse().slice(0, 4);
+            return state.reports.reverse().slice(0, 6);
         },
     },
     mutations: {
