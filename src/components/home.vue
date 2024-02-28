@@ -4,64 +4,140 @@
       Hello, {{ $store.state.user.first_name }}
     </h1>
     <h3 class="font-weight-bold nanum" style="font-size: 2.3rem">Welcome to the Built AI Accountant</h3>
-    <h3 class="font-weight-bold mt-10">Recently Added</h3>
-    <v-row class="py-5" v-if="reports.length > 0">
-      <v-card
-          hover
-          max-width="300"
-          class="text-center mx-3 py-5"
-          v-for="(i, idx) in reports"
 
-          :key="i.name"
+	  <v-row dense>
+		  <v-col cols="12" sm="8">
+			  <v-alert
+				  class="mt-3"
+				  prominent
+				  icon="mdi-chart-donut"
+				  text
+				  color="blue"
+			  >
+				  <v-row dense>
+					  <v-col cols="12" sm="9">
+						  <h2 class="mb-0">Usage Summary</h2>
+						  <strong class="font-weight-black"
+						  >1/10 SMS
+							  Sent</strong
+						  >
+					  </v-col>
+					  <v-col cols="12" sm="3">
+						  <v-btn
+							  outlined
+							  block
+							  x-large
+							  color="blue darken-4"
+							  dark
+							  depressed
+							  rounded
+							  @click="eventBus.$emit('newReport')"
+						  >New Report</v-btn
+						  >
+					  </v-col>
+				  </v-row>
+				  <v-row dense>
+					  <v-col cols="12">
+						  <v-progress-linear
+							  :value="10"
+							  color="blue"
+							  height="20"
+							  class="rounded-lg mt-2"
+							  rounded
+						  ></v-progress-linear>
+					  </v-col>
+				  </v-row>
+			  </v-alert>
 
-          @click="viewMode(i)"
-      >
-        <v-card-title
-            class="font-weight-bold text-center text-capitalize"
-            style="font-size: 0.9rem"
-        >
-          {{ i.name.split(":")[0] }}
-        </v-card-title>
-        <v-card-text>
-          <p>{{ i.name.split(":")[1] }}</p>
-        </v-card-text>
-      </v-card>
-    </v-row>
+			  <v-row dense>
+				  <v-col cols="12">
+					  <h3 class="font-weight-bold mt-5">Recently Added</h3>
+					  <v-row class="py-5" v-if="reports.length > 0">
+						  <v-card
+							  width="200"
+							  max-height="400"
+							  class="ma-3 py-4"
+							  v-for="(i, idx) in storeReports"
 
-    <p class="font-weight-light text-capitalize" v-else>
-      You have no recent documents.
-    </p>
+							  :key="i.name"
 
+							  @click="viewMode(i)"
+						  >
+							  <v-avatar
+								  rounded
+								  :color="i.color"
+								  class="ml-4"
+							  >
 
-    <v-row align="center">
-      <v-col cols="6" class="pa-5">
-        <v-img :src="require('../../public/img/Data report-bro.png')" alt="img" height="600"></v-img>
-      </v-col>
+								  <v-icon color="white">mdi-shimmer</v-icon>
 
-      <v-col cols="6">
-        <h2 class="nanum my-auto text-center" style="font-size: 2rem">Reporting just got easier!</h2>
-        <template>
-          <v-timeline>
-            <v-timeline-item color="blue darken-4"><p class="fw-bold">Click <span
-                class="blue darken-4 white--text pa-1 rounded-pill px-2">+New Report</span> on the top left corner of
-              the screen</p></v-timeline-item>
-            <v-timeline-item class="fw-bold" color="blue darken-4">Select the time period you want a report on.
-            </v-timeline-item>
-            <v-timeline-item class="text-right fw-bold" color="blue darken-4">
-              Let the AI Accountant generate comprehensive management reports for you.
-            </v-timeline-item>
-            <v-timeline-item class="fw-bold" color="blue darken-4">View, download, share and edit your report.
-            </v-timeline-item>
-          </v-timeline>
-        </template>
-      </v-col>
-    </v-row>
+							  </v-avatar>
+							  <v-card-title
+								  class="font-weight-bold text-center text-capitalize"
+							  >
+								  {{ i.name.split(":")[0] }}
+							  </v-card-title>
+							  <v-card-subtitle>
+								  <p>{{i.business_name}}</p>
+								  <p>{{ i.name.split(":")[1] }}</p>
+								  <p class="grey--text fw-bold mb-5">{{moment(i.created_at).format("ddd, Mo Do YYYY")}}</p>
+							  </v-card-subtitle>
+						  </v-card>
+					  </v-row>
+					  <v-row v-else>
+						  <v-col cols="12" class="">
+							  <p class="font-weight-light text-capitalize">
+								  You haven't generated any reports yet.
+							  </p>
+							  <v-img :src="require('../../public/img/Data report-bro.png')" alt="img" height="700"></v-img>
+						  </v-col>
+					  </v-row>
+				  </v-col>
+			  </v-row>
+		  </v-col>
+		  <v-col cols="12" sm="4">
+			  <v-card class="mt-3" flat color="blue darken-4">
+				  <v-card-text class="white--text text-center pt-6 pb-6">
+					  <h1 class="text-h4 font-weight-light mb-0">
+						  9
+					  </h1>
+					  <small>Current Reports balance</small>
+					  <v-btn
+						  class="mt-5"
+						  block
+						  dark
+						  color="green"
+						  depressed
+						  x-large
+						  rounded
+						  @click="showBuyCredit = true"
+					  >Buy Report Credits</v-btn
+					  >
+				  </v-card-text>
+			  </v-card>
+			  <h2 class="nanum my-auto text-center" style="font-size: 2rem">Reporting just got easier!</h2>
+			  <template>
+				  <v-timeline>
+					  <v-timeline-item color="blue darken-4"><p class="fw-bold">Click on <br/><span
+						  class="blue darken-4 white--text pa-1 rounded-pill px-2">New Report</span> </p></v-timeline-item>
+					  <v-timeline-item class="fw-bold" color="blue darken-4">Select the time period and business you want a report for.
+					  </v-timeline-item>
+					  <v-timeline-item class="text-right fw-bold" color="blue darken-4">
+						  Let Built CFO AI generate a comprehensive management report for you.
+					  </v-timeline-item>
+					  <v-timeline-item class="fw-bold" color="blue darken-4">View, download, share and edit your report.
+					  </v-timeline-item>
+				  </v-timeline>
+			  </template>
+		  </v-col>
+	  </v-row>
   </v-container>
 </template>
 
 <script>
 
 import eventBus from "@/utils";
+import moment from "moment";
 
 export default {
   name: "home",
@@ -73,25 +149,27 @@ export default {
     };
   },
   computed: {
-    recentReports() {
-      return this.$store.getters.getRecentDocuments;
+	  moment() {
+		  return moment
+	  },
+	  eventBus() {
+		  return eventBus
+	  },
+    storeReports() {
+      return this.$store.getters.getRecentDocuments
     },
   },
   methods: {
 
-
     viewMode(doc) {
-      doc = this.$store.state.reports.find((r) => r.id === doc.id);
+      doc = this.$store.state.reports.find((r) => r.uuid === doc.uuid);
       this.$store.commit("SET_CURRENT_REPORT", doc);
       this.$store.commit("TOGGLE_SIDEBAR", false);
-      this.$router.push(`/reports/${doc.id}`);
+      this.$router.push(`/reports/${doc.uuid}`);
     },
   },
 	mounted() {
-		eventBus.$on("getReports", (data) => {
-			this.reports = data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at)).slice(0, 4);
-
-		})
+		this.$store.dispatch('getReports')
 	}
 };
 </script>

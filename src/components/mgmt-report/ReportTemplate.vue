@@ -551,6 +551,7 @@ export default {
 		deleteReport() {
 			this.loading = true;
 			axios.delete('/api/management-reports/' + this.report.uuid).then(() => {
+				this.$store.dispatch('getReports')
 				this.openDeleteDialog = false;
 				this.$router.push('/');
 				this.$store.state.sidebarOpen = true
