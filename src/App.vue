@@ -149,30 +149,148 @@
             </v-card-title>
 
             <v-card-text>
-              <v-form ref="report_form" v-if="!creating">
+              <v-form ref="report_form" v-if="!creating" class="pt-5">
 
 
-              <label>Document Name</label>
               <v-text-field
+	              label="Report Name"
+	              dense
 	              v-model="fileName"
 	              autofocus
 	              outlined
-	              :rules="[(v) => !!v || 'Document name is required']"
+	              :rules="[(v) => !!v || 'Report name is required']"
               ></v-text-field>
 
-              <label>Select a period</label>
               	<v-autocomplete
-		              :clearable="true"
-		              v-model="reportPeriod"
-		              :items="reportPeriods"
-		              item-text="name"
-		              item-value="value"
-		              :rules="[(v) => !!v || 'Report period name is required']"
+		              label="Select a year"
+		              dense
+		              v-model="selectedYear"
+		              :items="businessYears"
 		              outlined
 	              ></v-autocomplete>
 
+	              <!--PERIOD SELECTOR	              -->
+								<label>Select a time period</label>
+	              <v-menu
+		              transition="scale-transition"
+		              v-model="openReportPeriodMenu"
+		              max-width="400px"
+		              :close-on-content-click="false"
+	              >
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn
+	                v-on="on"
+	                v-bind="attrs"
+	                depressed
+	                block
+	                :color="templateColor ? templateColor : '#0D47A1'"
+	                dark
+                >
+
+                    <v-icon>mdi-event</v-icon>
+
+                    {{
+		                reportPeriod ? reportPeriod.name : fromDate ? `${fromDate} - ${toDate}` : 'Click to select a time period'
+	                }}
+
+                </v-btn>
+              </template>
+
+              <v-card flat>
+                <v-card-title class="font-weight-light">
+                  Select time period
+                  <v-spacer></v-spacer>
+                  <v-btn
+	                  v-if="$vuetify.breakpoint.mobile"
+	                  text
+                  >Close
+                    <v-icon>mdi-close</v-icon>
+                  </v-btn>
+                </v-card-title>
+                <v-card-text>
+
+                  <v-list height="150px" class="overflow-y-auto mb-5">
+
+                    <v-list-item
+	                    v-for="(period, i) in reportPeriods"
+	                    :key="i"
+	                    class="border-bottom"
+	                    @click="fromDate = null; toDate = null; setPeriod(period);openReportPeriodMenu = false"
+                    >
+                      <v-list-item-icon>
+                        <v-icon>event</v-icon>
+                      </v-list-item-icon>
+                      <v-list-item-content>
+                        <v-list-item-title>{{
+		                        period.name
+	                        }}</v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </v-list>
+
+                  <p>Custom date range</p>
+
+	                <v-menu
+		                v-model="datemenu1"
+		                transition="scale-transition"
+		                min-width="250px"
+		                :close-on-content-click="false"
+	                >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+	                      v-model="fromDate"
+	                      label="from"
+	                      v-on="on"
+	                      outlined
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+	                    :min="`${selectedYear ? selectedYear : $store.state.user.current_business.min_year}-01-01`"
+	                    v-model="fromDate"
+	                    no-title
+	                    show-adjacent-months
+	                    @input="datemenu1 = false"
+                    ></v-date-picker>
+                  </v-menu>
+
+                  <v-menu
+	                  v-model="datemenu2"
+	                  transition="scale-transition"
+	                  min-width="250px"
+	                  :close-on-content-click="false"
+                  >
+                    <template v-slot:activator="{ on }">
+                      <v-text-field
+	                      v-model="toDate"
+	                      label="to"
+	                      v-on="on"
+	                      outlined
+                      ></v-text-field>
+                    </template>
+                    <v-date-picker
+	                    :min="fromDate"
+	                    :show-current="fromDate"
+	                    v-model="toDate"
+	                    no-title
+	                    show-adjacent-months
+	                    @input="datemenu2 = false"
+                    ></v-date-picker>
+                  </v-menu>
+
+                </v-card-text>
+	              <v-card-actions>
+		              <v-btn rounded block v-if="toDate && fromDate" color="#0D47A1" dark
+		                     @click="reportPeriod = null; openReportPeriodMenu = false">Use {{
+				              fromDate
+			              }} to {{ toDate }}</v-btn>
+	              </v-card-actions>
+              </v-card>
+            </v-menu>
+	              <!--BUSINESS-->
               	<v-autocomplete
 		              label="Select a business"
+		              dense
+		              class="mt-5"
 		              :clearable="true"
 		              v-model="selectedBusiness"
 		              :items="businesses"
@@ -180,12 +298,27 @@
 		              item-value="id"
 		              :rules="[(v) => !!v || 'Business is required']"
 		              outlined
-	              ></v-autocomplete>
+	              >
+              <template v-slot:item="data">
+                <template v-if="typeof data.item !== 'object'">
+                  <v-list-item-content v-text="data.item"></v-list-item-content>
+                </template>
+                <template v-else>
+                  <v-list-item-avatar>
+                    <img :src="data.item.logo" :alt="data.item">
+                  </v-list-item-avatar>
+                  <v-list-item-content>
+                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                    <v-list-item-subtitle v-html="data.item.email"></v-list-item-subtitle>
+                  </v-list-item-content>
+                </template>
+              </template>
+	              </v-autocomplete>
 
 
               <label>Select a theme color</label>
-              <v-icon :color="templateColor ? templateColor : '#0D47A1'"
-                      @click="openColorPicker = true">mdi-palette</v-icon>
+              <v-btn dark depressed block :color="templateColor ? templateColor : '#0D47A1'"
+                     @click="openColorPicker = true">{{ templateColor ? templateColor : '#0D47A1' }} <v-icon>mdi-chevron-down</v-icon></v-btn>
 
               </v-form>
               <div v-else class="text-center">
@@ -235,7 +368,7 @@
 		              depressed
 		              x-large
 		              :color="templateColor ? templateColor : '#0D47A1'"
-		              :disabled="!fileName ||!reportPeriod ||!selectedBusiness ||!templateColor"
+		              :disabled="!fileName ||!selectedBusiness ||!templateColor"
 		              v-if="!creating"
 	              >
 									Generate Report
@@ -248,7 +381,6 @@
 					 v-model="openColorPicker"
 					 width="300"
 					 scrollable
-					 persistent
 					 eager
 				 >
 					 <v-card flat>
@@ -301,6 +433,7 @@
 
 import eventBus from "@/utils";
 import GeneralErrorComponent from "@/components/GeneralErrorComponent.vue";
+import moment from "moment";
 
 export default {
 	name: "App",
@@ -319,44 +452,56 @@ export default {
 			reportPeriod: null,
 			reportPeriods: [
 				{
-					name: "Last Year",
-					value: "last_year",
-				},
-				{
-					name: "This Year",
-					value: "this_year",
+					name: "Full Year",
 				},
 				{
 					name: `1st Quarter`,
-					value: "1st_quarter",
 				},
 				{
 					name: `2nd Quarter`,
-					value: "2nd_quarter",
 				},
 				{
 					name: `3rd Quarter`,
-					value: "3rd_quarter",
 				},
+
 				{
 					name: `4th Quarter`,
-					value: "4th_quarter",
 				},
 				{
-					name: "Last Month",
-					value: "last_month",
+					name: "January",
 				},
 				{
-					name: "This Month",
-					value: "this_month",
+					name: "February",
 				},
 				{
-					name: "Last week",
-					value: "last_week",
+					name: "March",
 				},
 				{
-					name: "This week",
-					value: "this_week",
+					name: "April",
+				},
+				{
+					name: "May",
+				},
+				{
+					name: "June",
+				},
+				{
+					name: "July",
+				},
+				{
+					name: "August",
+				},
+				{
+					name: "September",
+				},
+				{
+					name: "October",
+				},
+				{
+					name: "November",
+				},
+				{
+					name: "December",
 				},
 			],
 			showSidebar: true,
@@ -374,8 +519,16 @@ export default {
 			businesses: [],
 			invitedBusinesses: [],
 			selectedBusiness: null,
-
-			openColorPicker: false
+			selectedYear: null,
+			openColorPicker: false,
+			toDate: "",
+			fromDate: "",
+			datemenu1: false,
+			datemenu2: false,
+			to: "",
+			from: "",
+			openReportPeriodMenu: false,
+			allowedDates: []
 		};
 	},
 
@@ -383,6 +536,22 @@ export default {
 		baseUrl() {
 			return this.$store.state.baseURL;
 		},
+		businessYears() {
+			const minYear = this.$store.state.user.current_business.min_year;
+			const maxYear = this.$store.state.user.current_business.max_year;
+			const years = [];
+			for (let year = minYear; year <= maxYear; year++) {
+				years.push(year);
+			}
+			return years;
+		},
+		dateRange() {
+			if (this.reportPeriod && this.selectedYear) {
+				console.log("Here")
+				return this.getDateRange(this.reportPeriod, this.selectedYear);
+			}
+			return null;
+		}
 	},
 	watch: {
 		fileToUpload() {
@@ -398,6 +567,9 @@ export default {
 					break;
 			}
 		},
+		selectedYear(newYear) {
+			console.log(newYear)
+		}
 	},
 	methods: {
 
@@ -421,33 +593,71 @@ export default {
 				})
 		},
 
-		resetModal() {
-			this.reporting = false;
-			this.step = 1;
-			this.fileToUpload = null;
-			this.reportPeriod = null;
-			this.isChatMode = true; // Initialize the chat mode as false
-			this.isReportMode = false; // Initialize the report mode as false
-			this.isLedgerMode = true;
-			this.fileName = null;
+		calculateFrequency(startDate, endDate) {
+			const oneDay = 24 * 60 * 60 * 1000; // Number of milliseconds in one day
+
+			// Convert dates to JavaScript Date objects
+			const startDateObj = new Date(startDate);
+			const endDateObj = new Date(endDate);
+
+			// Calculate the difference in days
+			const differenceInDays = Math.round(Math.abs((endDateObj - startDateObj) / oneDay));
+
+			// Determine the frequency based on the difference in days
+			if (differenceInDays < 8) {
+				return "daily";
+			} else if (differenceInDays < 30) {
+				return "weekly";
+			} else {
+				return "monthly";
+			}
 		},
-		viewMode(doc) {
-			doc = this.$store.state.reports.find((r) => r.id === doc.id);
-			this.$store.commit("SET_CURRENT_REPORT", doc);
-			this.$store.commit("TOGGLE_SIDEBAR", false);
+		getDateRange(reportPeriod, selectedYear) {
+			let from, to;
+
+			// Check if reportPeriod is a month
+			if (['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].includes(reportPeriod)) {
+				const monthIndex = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].indexOf(reportPeriod);
+				from = new Date(selectedYear, monthIndex, 1);
+				to = new Date(selectedYear, monthIndex + 1, 0);
+			}
+			// Check if reportPeriod is a quarter
+			else if (['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'].includes(reportPeriod)) {
+				const quarterIndex = ['1st Quarter', '2nd Quarter', '3rd Quarter', '4th Quarter'].indexOf(reportPeriod);
+				from = new Date(selectedYear, quarterIndex * 3, 1);
+				to = new Date(selectedYear, (quarterIndex + 1) * 3, 0);
+			}
+			// Check if reportPeriod is a full year
+			else if (reportPeriod === 'Full Year') {
+				from = new Date(selectedYear, 0, 1); // January 1st of the selected year
+				to = new Date(selectedYear, 11, 31); // December 31st of the selected year
+			}
+
+			from = moment(from, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ").format("YYYY-MM-DD");
+			to = moment(to, "ddd MMM DD YYYY HH:mm:ss [GMT]ZZ").format("YYYY-MM-DD");
+			return {from, to}
 		},
 		generateNewReport() {
 
 			if (this.$refs.report_form.validate()) {
+				let periodRange;
+				periodRange = this.reportPeriod ? this.getDateRange(this.reportPeriod.name, this.selectedYear) : {
+					from: this.fromDate,
+					to: this.toDate
+				};
+
 
 				let newFileObject = {
 					name: this.fileName.trim(),
-					period: this.reportPeriod,
 					color: this.templateColor,
+					from: periodRange.from,
+					to: periodRange.to,
+					reporting_period: this.calculateFrequency(periodRange.from, periodRange.to),
 					business_id: this.selectedBusiness
 				};
 
 				this.creating = true;
+				console.log(newFileObject);
 
 				axios.post("/api/management-reports", newFileObject)
 					.then(res => {
@@ -455,6 +665,10 @@ export default {
 						this.reporting = false;
 						this.$store.dispatch('getReports')
 						this.fileName = '';
+						this.fromDate = null;
+						this.toDate = null;
+						this.selectedYear = null
+						this.selectedBusiness = null
 						this.reportPeriod = '';
 						this.templateColor = '#0D47A1';
 						this.getReports();
@@ -475,11 +689,35 @@ export default {
 
 			}
 
+		},
+		setPeriod(period) {
+			this.reportPeriod = period
+			console.log(this.reportPeriod)
+			console.log("done")
+		},
+		daysBetweenDates(dateString1, dateString2) {
+			const date1 = moment(dateString1).format('YYYY-MM-DD')
+			const date2 = moment(dateString2).format('YYYY-MM-DD')
+			console.log('date1', 'date2')
+			console.log(date1, date2)
+
+			// Calculate the difference in milliseconds
+			const differenceMs = Math.abs(date2 - date1);
+
+			// Convert milliseconds to days
+			const differenceDays = Math.ceil(differenceMs / (1000 * 60 * 60 * 24));
+			switch (differenceDays) {
+				case differenceDays < 7:
+					return "daily";
+				case differenceDays < 28:
+					return "weekly";
+				case differenceDays >= 28:
+					return "monthly";
+			}
 		}
 	},
 	mounted() {
 		axios('/api/getbusinesses').then((res) => {
-			console.log(res.data)
 			this.businesses = res.data;
 		})
 		this.getReports();

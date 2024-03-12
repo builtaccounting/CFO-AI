@@ -349,7 +349,7 @@
 		  <v-card>
 			  <v-card-title>Are you sure?</v-card-title>
 			  <v-card-text>
-				  <p>Do you want to delete <strong>{{ report.name }}</strong>? This action cannot be reversed.</p>
+				  <p>Do you want to delete this report? This action cannot be reversed.</p>
 			  </v-card-text>
 			  <v-card-actions>
 				  <v-spacer></v-spacer>
@@ -369,8 +369,10 @@
 	  			  </v-card-text>
 	  			  <v-card-actions>
 	  				  <v-spacer></v-spacer>
-	            <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text @click="openConfirmRegenerate = false">No. Take me back!</v-btn>
-	            <v-btn class="text-capitalize mt-1 mx-auto fw-bold" color="blue darken-4" text @click="reloadReport">Yes</v-btn>
+	            <v-btn class="white--text text-capitalize mt-1 mx-auto fw-bold" color="red darken-4" text
+	                   @click="openConfirmRegenerate = false">No. Take me back!</v-btn>
+	            <v-btn class="text-capitalize mt-1 mx-auto fw-bold" color="blue darken-4" text
+	                   @click="reloadReport">Yes</v-btn>
 	  			  </v-card-actions>
 	  		  </v-card>
 	  	  </v-dialog>
@@ -451,7 +453,8 @@ export default {
 			regenerating: false,
 			editorContent: '',
 			openDeleteDialog: false,
-			openConfirmRegenerate: false
+			openConfirmRegenerate: false,
+			year: null
 		};
 	},
 	components: {
@@ -473,13 +476,16 @@ export default {
 
 			axios.get("/api/management-reports/" + this.uuid)
 				.then(res => {
-
+					console.log(res.data)
 					this.report = res.data;
 					document.title = 'CFO AI - ' + this.report.name.split(':')[0];
 					this.loading = false;
 					// this.$store.state.sidebarOpen = false;
 
-				})
+				}).catch((e) => {
+				this.loading = false;
+				console.log("An error occured: " + e);
+			})
 
 
 		},
@@ -487,8 +493,6 @@ export default {
 			this.presentMode = false;
 			this.pageToUpdate = page
 			// this.editorContent = page.summary
-		},
-		onEditorUpdate(update) {
 		},
 		updateSettings() {
 
@@ -524,7 +528,7 @@ export default {
 			axios.patch(`/api/management-reports/${this.report.uuid}/pages/${page.uuid}`, {
 				"content": page.summary
 			}).then((res) => {
-				if(this.pagesToUpdate.length === 1){
+				if (this.pagesToUpdate.length === 1) {
 					this.snackbarText = `Page updated`
 					this.showSnackbar = true
 				}
@@ -609,7 +613,7 @@ export default {
 }
 
 main {
-//background-image: url("/public/img/reportBgRed.png"); background-repeat: no-repeat; background-position: center center; min-height: 60vh !important; position: relative;
+	//background-image: url("/public/img/reportBgRed.png"); background-repeat: no-repeat; background-position: center center; min-height: 60vh !important; position: relative;
 }
 
 section {
