@@ -196,7 +196,7 @@
                 </v-btn>
               </template>
 
-              <v-card flat>
+              <v-card flat v-if="$store.state.user && $store.state.user.current_business">
                 <v-card-title class="font-weight-light">
                   Select time period
                   <v-spacer></v-spacer>
@@ -245,6 +245,7 @@
                       ></v-text-field>
                     </template>
                     <v-date-picker
+
 	                    :min="`${selectedYear ? selectedYear : $store.state.user.current_business.min_year}-01-01`"
 	                    v-model="fromDate"
 	                    no-title
@@ -537,6 +538,11 @@ export default {
 			return this.$store.state.baseURL;
 		},
 		businessYears() {
+
+      if (!this.$store.state.user || !this.$store.state.user.current_business){
+        return [];
+      }
+
 			const minYear = this.$store.state.user.current_business.min_year;
 			const maxYear = this.$store.state.user.current_business.max_year;
 			const years = [];
