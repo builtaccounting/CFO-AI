@@ -4,7 +4,7 @@ import store from "@/store";
 
 window.axios = axios;
 
-window.axios.defaults.baseURL = "https://web.builtaccounting.com";
+window.axios.defaults.baseURL = "https://webnext.builtaccounting.com";
 
 // window.axios.defaults.baseURL = "https://fxweb.builtaccounting.com";
 

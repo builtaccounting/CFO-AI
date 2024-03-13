@@ -12,13 +12,15 @@
       >{{ reportName }}
       </v-toolbar-title>
       <!--	  DOCUMENT DISPLAY-->
+
       <v-container
           class="relative overflow-y-auto  pa-2"
           style="height: 80vh"
           v-if="report"
 
       >
-        <!--      COVER PAGE-->
+
+          <!--      COVER PAGE-->
 	      <report-background
             :report="report"
             class="w-100"
@@ -158,6 +160,7 @@
       </v-container>
 
 
+
       <v-list color="grey lighten-4">
         <v-list-item>
           <v-spacer/>
@@ -174,12 +177,12 @@
           </v-btn>
 
           <v-btn
-              class="text-capitalize fw-bold mx-1"
-              small
-              outlined
+              class="fw-bold mx-1"
+              text
               depressed
               rounded
               color="blue darken-4"
+              :href="'https://webnext.builtaccounting.com/management-reports/'+report.uuid+'/download'"
           >
             <v-icon small>mdi-download</v-icon>
             Download
@@ -357,6 +360,13 @@ export default {
 
   methods: {
 
+    gotoStart(){
+
+
+
+      this.$vuetify.goTo("#start")
+
+    },
 
     getReport() {
 
