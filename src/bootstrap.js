@@ -50,7 +50,7 @@ axios.interceptors.response.use(
       if (error.response.status === 302) {
 
         store.state.generalMessage = {
-          message: error.response.data,
+          message: error.response.data.message ? error.response.data.message : error.response.data,
           errors: {}
         };
 

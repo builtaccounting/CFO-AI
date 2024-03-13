@@ -13,7 +13,8 @@ export default new Vuex.Store({
         currentReport: null,
         sidebarOpen: true,
         showGeneralMessage: false,
-        generalMessage: ''
+        generalMessage: '',
+        baseURL: "https://web.builtaccounting.com",
     },
     getters: {
         getExistingFile: (state) => (name) => {
@@ -26,7 +27,7 @@ export default new Vuex.Store({
             return [...new Set(categories)].sort();
         },
         getRecentDocuments(state) {
-            return state.reports.reverse().slice(0, 4);
+            return state.reports.reverse().slice(0, 6);
         },
     },
     mutations: {
