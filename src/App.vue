@@ -341,8 +341,8 @@
 	            </v-row>
 	            </v-sheet>
 
-              </v-form>
-              <div v-else class="text-center">
+	            </v-form>
+	            <div v-else class="text-center">
 
               <v-progress-circular
 	              size="200"
@@ -543,9 +543,9 @@ export default {
 		},
 		businessYears() {
 
-      if (!this.$store.state.user || !this.$store.state.user.current_business){
-        return [];
-      }
+			if (!this.$store.state.user || !this.$store.state.user.current_business) {
+				return [];
+			}
 
 			const minYear = this.$store.state.user.current_business.min_year;
 			const maxYear = this.$store.state.user.current_business.max_year;
@@ -557,7 +557,6 @@ export default {
 		},
 		dateRange() {
 			if (this.reportPeriod && this.selectedYear) {
-				console.log("Here")
 				return this.getDateRange(this.reportPeriod, this.selectedYear);
 			}
 			return null;
@@ -577,9 +576,9 @@ export default {
 					break;
 			}
 		},
-		selectedYear(newYear) {
-			console.log(newYear)
-		}
+		// selectedYear(newYear) {
+		// 	console.log(newYear)
+		// }
 	},
 	methods: {
 
@@ -651,12 +650,15 @@ export default {
 			// TODO SET DEFAULT VALUES FOR DATE ON REPORT PERIOD DIALOG MOUNT
 
 			if (this.$refs.report_form.validate()) {
+				console.log('periodRange')
 				let periodRange;
-				periodRange = this.reportPeriod ? this.getDateRange(this.reportPeriod.name, this.selectedYear) : {
-					from: this.fromDate,
-					to: this.toDate
-				};
-				if (this.fromDate === this.toDate) {
+				periodRange = this.reportPeriod
+					? this.getDateRange(this.reportPeriod.name, this.selectedYear)
+					: {
+						from: this.fromDate,
+						to: this.toDate
+					};
+				if (periodRange.from === periodRange.to) {
 					this.snackbarType = "error";
 					this.snackbarMsg = "From date and to date cannot be the same";
 					this.showSnackbar = true;
@@ -709,7 +711,6 @@ export default {
 		setPeriod(period) {
 			this.reportPeriod = period
 			console.log(this.reportPeriod)
-			console.log("done")
 		},
 		daysBetweenDates(dateString1, dateString2) {
 			const date1 = moment(dateString1).format('YYYY-MM-DD')
