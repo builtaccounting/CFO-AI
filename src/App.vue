@@ -341,20 +341,22 @@
               </div>
 
             </v-card-text>
-	            <v-sheet rounded="lg" class="mt-5 mx-5 pt-5" color="grey lighten-4">
-		            <v-row class="pa-5">
+
+
+	            <v-sheet height="300" rounded="lg" class="mt-5 mx-5 pt-5" color="grey lighten-4">
+		            <v-row>
 		            <v-col cols="12">
 			            <h2 class="mx-1 font-weight-medium text-capitalize">coming soon...</h2>
 		            </v-col>
 		            <v-col cols="12" class="d-flex align-center">
-		              <img src="/img/qb_logo1.png" height="100" alt="qb"/>
-		              <img src="/img/Wave_logo_RGB-758x275-296650780.png" height="75" alt="wave"/>
-		              <img src="/img/zoho-books_q5s8.1920-3895511793.jpg" height="70" alt="zoho" class="white"/>
+		              <v-img src="/img/qb_logo1.png" height="100" alt="qb"/>
+		              <v-img src="/img/Wave_logo_RGB-758x275-296650780.png" height="75" alt="wave"/>
+		              <v-img src="/img/zoho-books_q5s8.1920-3895511793.jpg" height="70" alt="zoho" class="white"/>
 		            </v-col>
 		            <v-col cols="12" class="d-flex align-center">
-		              <img src="/img/xero-logo-1122207467.png" height="100" alt="xero"/>
-		              <img src="/img/freshbooks_hn71.1200-3996272495.jpg" height="90" alt="fb" class="pa-2 ml-2"/>
-		              <img src="/img/Sage_Green_Logo-2228348961.jpg" height="80" alt="sage" class="white pa-2 ml-2"/>
+		              <v-img src="/img/xero-logo-1122207467.png" height="100" alt="xero"/>
+		              <v-img src="/img/freshbooks_hn71.1200-3996272495.jpg" height="90" alt="fb" class="pa-2 ml-2"/>
+		              <v-img src="/img/Sage_Green_Logo-2228348961.jpg" height="80" alt="sage" class="white pa-2 ml-2"/>
 		            </v-col>
 	            </v-row>
 	            </v-sheet>

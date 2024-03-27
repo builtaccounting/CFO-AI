@@ -21,6 +21,7 @@ import {ElementTiptapPlugin} from "element-tiptap";
 import "element-ui/lib/theme-chalk/index.css";
 // import this package's styles
 import "element-tiptap/lib/index.css";
+import { StripePlugin } from '@vue-stripe/vue-stripe';
 
 // use ElementUI's plugin
 Vue.use(ElementUI);
@@ -42,6 +43,7 @@ Vue.use(VueRouter);
 Vue.prototype.moment = moment;
 Vue.config.productionTip = false;
 Vuetify.config.silent = true;
+
 
 new Vue({
     router,
