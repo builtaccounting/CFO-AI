@@ -182,6 +182,7 @@
 	                v-on="on"
 	                v-bind="attrs"
 	                depressed
+	                outlined
 	                block
 	                :color="templateColor ? templateColor : '#0D47A1'"
 	                dark
@@ -190,9 +191,9 @@
                     <v-icon>mdi-event</v-icon>
 
                     {{
-		                reportPeriod ? reportPeriod.name : fromDate ? `${fromDate} - ${toDate}` : 'Click to select a time period'
+		                reportPeriod ? reportPeriod.name : fromDate ? `${fromDate} - ${toDate}` : 'select a period'
 	                }}
-
+									<v-icon>mdi-chevron-down</v-icon>
                 </v-btn>
               </template>
 
@@ -305,8 +306,8 @@
                   <v-list-item-content v-text="data.item"></v-list-item-content>
                 </template>
                 <template v-else>
-                  <v-list-item-avatar>
-                    <img :src="data.item.logo" :alt="data.item">
+                  <v-list-item-avatar rounded>
+	                  <v-img contain :src="data.item.logo" :alt="data.item"></v-img>
                   </v-list-item-avatar>
                   <v-list-item-content>
                     <v-list-item-title v-html="data.item.name"></v-list-item-title>
@@ -322,7 +323,26 @@
                      @click="openColorPicker = true">{{ templateColor ? templateColor : '#0D47A1' }} <v-icon>mdi-chevron-down</v-icon></v-btn>
 
               </v-form>
-              <div v-else class="text-center">
+	            <v-sheet rounded="lg" class="mt-3 pt-5" color="grey lighten-4" v-if="!creating">
+		            <v-row class="pa-5">
+		            <v-col cols="12">
+			            <h2 class="mx-1 font-weight-medium text-capitalize">coming soon...</h2>
+		            </v-col>
+		            <v-col cols="12" class="d-flex align-center">
+		              <img src="/img/qb_logo1.png" height="100" alt="qb"/>
+		              <img src="/img/Wave_logo_RGB-758x275-296650780.png" height="75" alt="wave"/>
+		              <img src="/img/zoho-books_q5s8.1920-3895511793.jpg" height="70" alt="zoho" class="white"/>
+		            </v-col>
+		            <v-col cols="12" class="d-flex align-center">
+		              <img src="/img/xero-logo-1122207467.png" height="100" alt="xero"/>
+		              <img src="/img/freshbooks_hn71.1200-3996272495.jpg" height="90" alt="fb" class="pa-2 ml-2"/>
+		              <img src="/img/Sage_Green_Logo-2228348961.jpg" height="80" alt="sage" class="white pa-2 ml-2"/>
+		            </v-col>
+	            </v-row>
+	            </v-sheet>
+
+	            </v-form>
+	            <div v-else class="text-center">
 
               <v-progress-circular
 	              size="200"
@@ -342,6 +362,7 @@
 
             </v-card-text>
 
+<<<<<<< HEAD
 
 	            <v-sheet height="300" rounded="lg" class="mt-5 mx-5 pt-5" color="grey lighten-4">
 		            <v-row>
@@ -360,6 +381,8 @@
 		            </v-col>
 	            </v-row>
 	            </v-sheet>
+=======
+>>>>>>> 2d165655f2ac0c46463347e9ae43a44039b0b943
             <v-card-actions>
               	<v-btn
 		              @click="generateNewReport"
@@ -541,9 +564,9 @@ export default {
 		},
 		businessYears() {
 
-      if (!this.$store.state.user || !this.$store.state.user.current_business){
-        return [];
-      }
+			if (!this.$store.state.user || !this.$store.state.user.current_business) {
+				return [];
+			}
 
 			const minYear = this.$store.state.user.current_business.min_year;
 			const maxYear = this.$store.state.user.current_business.max_year;
@@ -555,7 +578,6 @@ export default {
 		},
 		dateRange() {
 			if (this.reportPeriod && this.selectedYear) {
-				console.log("Here")
 				return this.getDateRange(this.reportPeriod, this.selectedYear);
 			}
 			return null;
@@ -575,9 +597,9 @@ export default {
 					break;
 			}
 		},
-		selectedYear(newYear) {
-			console.log(newYear)
-		}
+		// selectedYear(newYear) {
+		// 	console.log(newYear)
+		// }
 	},
 	methods: {
 
@@ -646,13 +668,23 @@ export default {
 			return {from, to}
 		},
 		generateNewReport() {
+			// TODO SET DEFAULT VALUES FOR DATE ON REPORT PERIOD DIALOG MOUNT
 
 			if (this.$refs.report_form.validate()) {
+				console.log('periodRange')
 				let periodRange;
-				periodRange = this.reportPeriod ? this.getDateRange(this.reportPeriod.name, this.selectedYear) : {
-					from: this.fromDate,
-					to: this.toDate
-				};
+				periodRange = this.reportPeriod
+					? this.getDateRange(this.reportPeriod.name, this.selectedYear)
+					: {
+						from: this.fromDate,
+						to: this.toDate
+					};
+				if (periodRange.from === periodRange.to) {
+					this.snackbarType = "error";
+					this.snackbarMsg = "From date and to date cannot be the same";
+					this.showSnackbar = true;
+					return;
+				}
 
 
 				let newFileObject = {
@@ -665,12 +697,10 @@ export default {
 				};
 
 				this.creating = true;
-				console.log(newFileObject);
 
 				axios.post("/api/management-reports", newFileObject)
 					.then(res => {
 						this.creating = false;
-						this.reporting = false;
 						this.$store.dispatch('getReports')
 						this.fileName = '';
 						this.fromDate = null;
@@ -680,6 +710,7 @@ export default {
 						this.reportPeriod = '';
 						this.templateColor = '#0D47A1';
 						this.getReports();
+						this.reporting = false;
 
 						const URL = "/reports/" + res.data.data.uuid;
 
@@ -701,7 +732,6 @@ export default {
 		setPeriod(period) {
 			this.reportPeriod = period
 			console.log(this.reportPeriod)
-			console.log("done")
 		},
 		daysBetweenDates(dateString1, dateString2) {
 			const date1 = moment(dateString1).format('YYYY-MM-DD')

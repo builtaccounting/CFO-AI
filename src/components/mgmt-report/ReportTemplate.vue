@@ -205,11 +205,11 @@
         <v-list-item>
           <v-spacer/>
           <v-btn
-	          class="text-capitalize fw-bold"
+	          class="fw-bold"
 	          small
-	          outlined
 	          depressed
 	          rounded
+	          text
 	          color="blue darken-4"
           >
             <v-icon small>mdi-share</v-icon>
@@ -217,12 +217,13 @@
           </v-btn>
 
           <v-btn
-              class="fw-bold mx-1"
-              text
-              depressed
-              rounded
-              color="blue darken-4"
-              :href="'https://webnext.builtaccounting.com/management-reports/'+report.uuid+'/download'"
+	          class="fw-bold mx-1"
+	          text
+	          depressed
+	          small
+	          rounded
+	          color="blue darken-4"
+	          :href="'https://webnext.builtaccounting.com/management-reports/'+report.uuid+'/download'"
 
           >
             <v-icon small>mdi-download</v-icon>
@@ -230,9 +231,9 @@
           </v-btn>
 
           <v-btn
-	          class="text-capitalize fw-bold"
+	          class="fw-bold"
 	          small
-	          outlined
+	          text
 	          depressed
 	          rounded
 	          color="blue darken-4"
@@ -470,13 +471,12 @@ export default {
 
 	methods: {
 
-    gotoStart(){
+		gotoStart() {
 
 
+			this.$vuetify.goTo("#start")
 
-      this.$vuetify.goTo("#start")
-
-    },
+		},
 
 		getReport() {
 
