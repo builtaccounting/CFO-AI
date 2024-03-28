@@ -55,12 +55,13 @@
 						<h3 class="font-weight-bold mt-5">Recently Added</h3>
 						<v-row class="py-5" v-if="storeReports.length > 0">
 							<v-card
+                  outlined
 								width="200"
 								max-height="300"
 								class="ma-3 py-4"
 								v-for="(i, idx) in storeReports"
 
-								:key="i.name"
+								:key="i.id"
 
 								@click="viewMode(i)"
 							>
@@ -99,25 +100,7 @@
 				</v-row>
 			</v-col>
 			<v-col cols="12" sm="4">
-				<v-card class="mt-3" flat color="blue darken-4">
-					<v-card-text class="white--text text-center pt-6 pb-6">
-						<h1 class="text-h4 font-weight-light mb-0">
-							{{ 10 - storeReports.length }}
-						</h1>
-						<small>Current credit balance</small>
-						<v-btn
-							class="mt-5"
-							block
-							dark
-							color="green"
-							depressed
-							x-large
-							rounded
-						>Buy Credits
-						</v-btn
-						>
-					</v-card-text>
-				</v-card>
+			<credit-component></credit-component>
 				<h2 class="nanum my-auto text-center" style="font-size: 2rem">Reporting just got easier!</h2>
 				<template>
 					<v-timeline>
@@ -142,9 +125,11 @@
 
 import eventBus from "@/utils";
 import moment from "moment";
+import CreditComponent from "@/components/CreditComponent.vue";
 
 export default {
 	name: "home",
+  components: {CreditComponent},
 	data() {
 		return {
 			loading: false,

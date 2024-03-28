@@ -8,15 +8,18 @@
   },
   "dependencies": {
     "@mdi/font": "^7.0.96",
-    "@vue-stripe/vue-stripe": "^4.5.0",
+    "assert": "^2.1.0",
     "axios": "^1.6.2",
     "core-js": "^3.8.3",
+
     "dayjs": "^1.11.10",
     "element-tiptap": "^1.27.1",
     "js-cookie": "^3.0.5",
     "marked": "^11.1.1",
     "moment": "^2.29.4",
+
     "register-service-worker": "^1.7.2",
+
     "vue": "^2.6.14",
     "vue-apexcharts": "^1.6.2",
     "vue-router": "^3.5.1",

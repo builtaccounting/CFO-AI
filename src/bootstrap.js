@@ -2,6 +2,7 @@ import axios from "axios";
 import {getAccessToken} from "@/utils";
 import store from "@/store";
 
+
 window.axios = axios;
 
 window.axios.defaults.baseURL = "https://webnext.builtaccounting.com";

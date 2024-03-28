@@ -21,7 +21,6 @@ import {ElementTiptapPlugin} from "element-tiptap";
 import "element-ui/lib/theme-chalk/index.css";
 // import this package's styles
 import "element-tiptap/lib/index.css";
-import { StripePlugin } from '@vue-stripe/vue-stripe';
 
 // use ElementUI's plugin
 Vue.use(ElementUI);
